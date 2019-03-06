@@ -1,0 +1,15 @@
+node_modules
+
+*.d.ts
+*.js.map
+*.log
+
+!/test/*
+!/Gruntfile.js
+.tscache
+.idea
+out
+
+/log
+
+package-lock.json
