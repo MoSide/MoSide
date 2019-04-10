@@ -1,9 +1,9 @@
 import {ARRAY_TYPE, PARAMETERS} from './type-decorator'
 import {IModelProperty} from './model-property.interface'
-import {TypeProvider} from '../interface/type-provider.interface'
-import {ControllerFunction} from '../common/controller-function'
-import {IParameter} from '../interface/parameter.interface'
-import {getSymbolDescription} from '../common/get-symbol-description'
+import {TypeProvider} from '../function-injector/type-provider.interface'
+import {CtrFunc} from '../function-injector/ctr-func'
+import {IParameter} from '../function-injector/parameter.interface'
+import {getSymbolDescription} from '../utils/get-symbol-description'
 
 let FALSE = Symbol('false')
 
@@ -58,8 +58,8 @@ export class Mood {
 
   }
 
-  resolve(cFunc: ControllerFunction): { result: boolean, body?: TypeProvider[] } {
-    const params = cFunc.getParameters()
+  resolve(cFunc: CtrFunc): { result: boolean, body?: TypeProvider[] } {
+    const params = cFunc.parameters
     const body: TypeProvider[] = []
     for (let param of params) {
       if (param.spec === true) {

@@ -1,12 +1,20 @@
 {
-  "name": "mo-side",
-  "version": "1.0.0",
+  "name": "@moside/moside",
+  "version": "0.3.1-a",
   "description": "decorator风格web api框架",
   "main": "index.ts",
-  "author": "ne",
-  "private": true,
+  "keywords": [
+    "moside"
+  ],
+  "author": "moside-yskun",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/MoSide/moSide"
+  },
+  "private": false,
+  "license": "MIT",
   "scripts": {
-    "dev": "  nodemon --watch ./example --ext ts --exec ts-node ./example",
+    "dev": "nodemon --watch ./example --ext ts --exec ts-node ./example",
     "test": "ts-node $NODE_DEBUG_OPTION ./src"
   },
   "devDependencies": {

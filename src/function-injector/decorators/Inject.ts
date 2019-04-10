@@ -1,8 +1,8 @@
 import 'reflect-metadata'
-import {getSymbolDescription} from '../common/get-symbol-description'
-import {IParameter} from '../interface/parameter.interface'
-import {MetadataArray} from '../common/metadata-array'
-import {PARAMS} from '../moside/symbol'
+import {PARAMS} from "../../moside/symbol";
+import {MetadataArray} from "../../utils/metadata-array";
+import {IParameter} from "../parameter.interface";
+import {getSymbolDescription} from "../../utils/get-symbol-description";
 
 function getTarget(method: symbol, prop: string) {
   const method_str = getSymbolDescription(method)
@@ -10,8 +10,7 @@ function getTarget(method: symbol, prop: string) {
 }
 
 
-// todo 这个改一下名字
-export function Type(method: symbol, prop: string) {
+export function Inject(method: symbol, prop: string) {
   return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
     const specParam: IParameter[] = MetadataArray(PARAMS, target, <string>propertyKey)
     const parameters = Reflect.getMetadata('design:paramtypes', target, propertyKey)

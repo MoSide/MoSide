@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import {IModelProperty} from './model-property.interface'
-import {MetadataArray} from '../common/metadata-array'
+import {MetadataArray} from '../utils/metadata-array'
 
 export let ARRAY_TYPE = 'array_type'
 export let PARAMETERS = 'response:parameters'

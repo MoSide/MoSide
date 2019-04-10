@@ -1,6 +1,6 @@
 import 'reflect-metadata'
-import {MetadataArray} from '../common/metadata-array'
-import {IParameter} from '../interface/parameter.interface'
+import {MetadataArray} from '../utils/metadata-array'
+import {IParameter} from '../function-injector/parameter.interface'
 import {PARAMS} from '../moside/symbol'
 
 export function Require(target: any, prop: string, index?: number) {

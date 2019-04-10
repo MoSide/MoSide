@@ -1,5 +1,4 @@
-import e = require('express')
-import {ResMessage} from '../interface/res-message.interface'
+import e = require('express');
 
 export class ResponseHandler {
 
@@ -10,8 +9,7 @@ export class ResponseHandler {
   private _mark: boolean = false
 
   constructor(private res: e.Response,
-              private _next: e.NextFunction,
-              private resMessage: ResMessage[] | null = null) {
+              private _next: e.NextFunction) {
   }
 
   status(status: number): ResponseHandler {
@@ -74,20 +72,6 @@ export class ResponseHandler {
       // this.res.sendFile(this._file);
     }
     else {
-      // 处理resMessage
-      if (this.resMessage) {
-        for (let i = 0; i < this.resMessage.length; i++) {
-          if (this.resMessage[i].status === this._status) {
-            if (this._message === '') {
-              this._message = <string>this.resMessage[i].message
-            }
-            // if (!this._body && this.resMessage[i].body) {
-            //     this._body = this.resMessage[i].body;
-            // }
-            break
-          }
-        }
-      }
 
       if (this._status !== 0 && this._message === '') {
         throw new Error('返回状态不为0，但消息为空')
