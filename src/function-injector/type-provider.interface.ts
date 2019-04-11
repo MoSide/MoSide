@@ -1,4 +1,4 @@
 export interface TypeProvider {
-  type: string | any;
+  token: string | any;
   useValue: any;
 }

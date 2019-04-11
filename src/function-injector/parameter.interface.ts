@@ -1,7 +1,8 @@
 export interface IParameter {
-  type: any;
-  target?: string;
-  index: number;
-  spec: boolean;
-  require?: boolean;
+  token: any
+  type: any
+  index: number
+  require?: boolean
+
+  [param: string]: any
 }

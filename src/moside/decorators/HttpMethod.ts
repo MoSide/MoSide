@@ -1,7 +1,7 @@
 import {getControllerMetadata} from "./Controller";
 import {IControllerMethodMetadata, IHttpMethodFunction} from "../controller.interface";
 import {METHOD} from "../symbol";
-import {Injectable} from "../../function-injector/decorators/Injectable";
+import {Injectable} from "../../function-injector/Injectable.decorator";
 
 export function HttpMethod(method: string, path?: string) {
   return (target: Object, prop: string, descriptor: PropertyDescriptor) => {

@@ -8,7 +8,7 @@ import {FunctionInjector} from "../../function-injector/function-injector";
 
 function createMethodInjector(injector: FunctionInjector, {request, response}): FunctionInjector {
   const ctxProvider: TypeProvider = {
-    type: Ctx,
+    token: Ctx,
     useValue: new Ctx(request, response)
   }
   return injector.createChild([ctxProvider])

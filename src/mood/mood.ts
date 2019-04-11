@@ -67,14 +67,14 @@ export class Mood {
         if (ret === FALSE) {
           return {result: false}
         }
-        body.push({type: param.target, useValue: ret})
+        body.push({token: param.target, useValue: ret})
       } else if (this.models.has(param.type)) {
         const ret = this.getParamModels(param)
         if (ret === false) {
           return {result: false}
         }
 
-        body.push({type: ret.constructor, useValue: ret})
+        body.push({token: ret.constructor, useValue: ret})
       }
     }
 

@@ -1,13 +1,13 @@
 import 'reflect-metadata'
 import {MetadataArray} from '../utils/metadata-array'
 import {IParameter} from '../function-injector/parameter.interface'
-import {PARAMS} from '../moside/symbol'
+import {PARAMETERS} from '../moside/symbol'
 
 export function Require(target: any, prop: string, index?: number) {
   if (!index) {
     Reflect.defineMetadata('parameters:require', true, target, prop)
   } else {
-    const specParam: IParameter[] = MetadataArray(PARAMS, target, <string>prop)
+    const specParam: IParameter[] = MetadataArray(PARAMETERS, target, <string>prop)
     if (specParam[index]) {
       specParam[index].require = true
     } else {

@@ -15,7 +15,7 @@ export class FunctionInjector {
   static create(providers: TypeProvider[], throwError: boolean = true): FunctionInjector {
     const fun = new FunctionInjector()
     fun.THROW_ERROR = throwError
-    fun.push([{type: FunctionInjector, useValue: this}, ...providers])
+    fun.push([{token: FunctionInjector, useValue: this}, ...providers])
     return fun
   }
 
@@ -26,9 +26,9 @@ export class FunctionInjector {
   }
 
   push(providers: TypeProvider[]) {
-    providers.forEach(({type, useValue}) => {
+    providers.forEach(({token, useValue}) => {
       // todo 此处应抛出错误？
-      if (type === null || type === undefined) {
+      if (token === null || token === undefined) {
         return logger.debug(`a provider hasn't prop 'type' or 'useValue`)
       }
 
@@ -36,7 +36,7 @@ export class FunctionInjector {
         return logger.debug(`a provider hasn't prop 'type' or 'useValue`)
       }
 
-      this.params.set(type, useValue)
+      this.params.set(token, useValue)
     })
   }
 
@@ -73,12 +73,11 @@ export class FunctionInjector {
     const cFunParams: IParameter[] = cFunc.parameters
 
     return cFunParams.map(parameter => {
-      const type = parameter.target || parameter.type
-      const param = this.getParam(type)
+      const param = this.getParam(parameter.token)
 
       if (param === void 0) {
         throw new Error(
-          `${cFunc.targetType.name}(${cFunc.prop}) -> ${parameter.type.name || parameter.type} has no provider`
+          `${cFunc.targetType.name}(${cFunc.prop}) -> ${parameter.type.name || parameter.type}(${parameter.index}) has no provider`
         )
       }
 

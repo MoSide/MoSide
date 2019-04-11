@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import {IParameter} from './parameter.interface'
-import {PARAMS} from '../moside/symbol'
+import {PARAMETERS} from '../moside/symbol'
 
 export class CtrFunc {
 
@@ -17,7 +17,7 @@ export class CtrFunc {
         throw new Error(`the func ${this.targetType.name}(${this.prop}) has not decorate by Injectable`)
       }
 
-      const specParams: IParameter[] = this.getMetadata(PARAMS)
+      const specParams: IParameter[] = this.getMetadata(PARAMETERS)
 
       this._parameters = new Array(...parameters)
 

@@ -1,7 +1,7 @@
 export let METHOD = Symbol('METHOD')
 export let PROVIDER_LIST = Symbol('PROVIDER_LIST')
 export let PATH = Symbol('PATH')
-export let PARAMS = Symbol('PARAMS')
+export let PARAMETERS = Symbol('PARAMETERS')
 export let CONTROLLER = Symbol('CONTROLLER')
 export let INSTANCE = Symbol('INSTANCE')
 export let TARGET = Symbol('TARGET')
