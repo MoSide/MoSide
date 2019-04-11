@@ -5,6 +5,7 @@ import {Ctx} from "../ctx";
 import {TypeProvider} from "../../function-injector/type-provider.interface";
 import {CtrFunc} from "../../function-injector/ctr-func";
 import {FunctionInjector} from "../../function-injector/function-injector";
+import {Injectable} from "../../function-injector/Injectable.decorator";
 
 function createMethodInjector(injector: FunctionInjector, {request, response}): FunctionInjector {
   const ctxProvider: TypeProvider = {
@@ -15,7 +16,6 @@ function createMethodInjector(injector: FunctionInjector, {request, response}): 
 }
 
 class Process {
-  globalProvider: any[] = []
 
   proxyHandler: ProxyHandler<Object> = {
     get: (target: Object, p: string, receiver: any): any => {
@@ -30,17 +30,35 @@ class Process {
       }
 
       const cMeta: IControllerMetadata = getControllerMetadata(target)
-      return (request, response) => {
+      return async (request, response) => {
         const injector = createMethodInjector(cMeta.injector, {
           request,
           response
         })
 
-        injector.resolveAndApply(
-          new CtrFunc(target, p)
-        )
+        await injector.resolveAndApply([
+          new CtrFunc(this, 'beforeProcess'),
+          new CtrFunc(this, 'controllerProcess'),
+          new CtrFunc(this, 'afterProcess')
+        ])
       }
     }
+  }
+
+  @Injectable
+  beforeProcess() {
+  }
+
+  @Injectable
+  afterProcess() {
+  }
+
+  pluginProcess(stage: 'before' | 'after') {
+  }
+
+  @Injectable
+  controllerProcess() {
+
   }
 
   bindHandler(ctr: any) {

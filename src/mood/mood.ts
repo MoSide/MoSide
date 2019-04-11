@@ -1,61 +1,25 @@
-import {ARRAY_TYPE, PARAMETERS} from './type-decorator'
 import {IModelProperty} from './model-property.interface'
 import {TypeProvider} from '../function-injector/type-provider.interface'
 import {CtrFunc} from '../function-injector/ctr-func'
 import {IParameter} from '../function-injector/parameter.interface'
-import {getSymbolDescription} from '../utils/get-symbol-description'
+import {arrayTypeConvector, typeConvector} from "./utils";
+import {getRequireMetadata} from "./require";
+import {getArrayTypeMeta} from "./mood-decorator";
+import {PARAMETERS} from "./constant";
+import {getModelMeta} from "./Model.decorator";
 
-let FALSE = Symbol('false')
+const FALSE = Symbol('false')
 
 export class Mood {
   protected source: Map<string, any>
-  protected models: Set<any>
 
   protected constructor() {
   }
 
-  static create(src: [string, any][], models: Set<any>): Mood {
+  static create(source: [string, any][]): Mood {
     const mood = new Mood()
-    mood.source = new Map(src)
-    mood.models = models
+    mood.source = new Map(source)
     return mood
-  }
-
-  protected static toType(object: any, type: Object) {
-    switch (type) {
-      case Number:
-        return Number(object)
-      case Boolean:
-        if (typeof object === 'string') {
-          if (object === 'true') {
-            return true
-          } else if (object === 'false') {
-            return false
-          } else {
-            return object
-          }
-        }
-        return Boolean(object)
-      case Date:
-        return new Date(object)
-      case String:
-        return object
-      default:
-        return object
-    }
-  }
-
-  private static ArrayToType(mIns: any, parameter: IModelProperty, src: any) {
-    let type = Reflect.getMetadata(ARRAY_TYPE, mIns, parameter.property)
-    if (type) {
-      mIns[parameter.property] = []
-      for (let i = 0; i < src[parameter.property].length; i++) {
-        mIns[parameter.property].push(Mood.toType(src[parameter.property][i], type))
-      }
-    } else {
-      mIns[parameter.property] = src[parameter.property]
-    }
-
   }
 
   resolve(cFunc: CtrFunc): { result: boolean, body?: TypeProvider[] } {
@@ -63,86 +27,98 @@ export class Mood {
     const body: TypeProvider[] = []
     for (let param of params) {
       if (param.spec === true) {
-        const ret = this.getParam(param)
+        const ret = this.handleParameter(param)
         if (ret === FALSE) {
           return {result: false}
         }
         body.push({token: param.target, useValue: ret})
-      } else if (this.models.has(param.type)) {
-        const ret = this.getParamModels(param)
-        if (ret === false) {
-          return {result: false}
-        }
+      } else {
+        if (getModelMeta(param.type)) {
+          const ret = this.handleModel(param)
+          if (ret === false) {
+            return {result: false}
+          }
 
-        body.push({token: ret.constructor, useValue: ret})
+          body.push({token: ret.constructor, useValue: ret})
+        }
       }
     }
 
     return {result: true, body: body}
   }
 
-  protected getParamModels(param: IParameter) {
-    let mIns = new param.type
-    const metaKeys: Set<symbol> = Reflect.getMetadata(PARAMETERS, mIns)
+  handleModel(Model: any) {
+    const model = new Model()
+    const metaKeys: Set<string> = Reflect.getMetadata(PARAMETERS, model)
 
     //获取需要的属性
-    for (let key of metaKeys) {
-      let parameters: IModelProperty[] = Reflect.getMetadata(key, mIns)
-      let src = this.source.get(getSymbolDescription(key))
+    for (const key of metaKeys) {
+      let parameters: IModelProperty[] = Reflect.getMetadata(key, model)
+      const source = this.source.get(key)
 
-      if (!src) {
+      if (!source) {
         continue
       }
 
-      for (let parameter of parameters) {
+      const result = parameters.findIndex(({property, type}) => {
+        if (source[property] === undefined) {
+          return getRequireMetadata(model, property)
+        }
 
-        if (src[parameter.property] === undefined) {
-          const isRequire = Reflect.getMetadata('parameters:require', mIns, parameter.property)
-          if (isRequire === true) {
-            return false
+        if (type === Array && source[property].length) {
+          const arrType = getArrayTypeMeta(model, property)
+          if (arrType) {
+            model[property] = arrayTypeConvector(source[property], arrType)
+          } else {
+            model[property] = source[property]
           }
-          continue
-        }
-
-        if (parameter.type === Array && src[parameter.property].length) {
-          Mood.ArrayToType(mIns, parameter, src)
         } else {
-          mIns[parameter.property] = Mood.toType(src[parameter.property], parameter.type)
+          model[property] = typeConvector(source[property], type)
         }
-      }
-    }
 
-    return mIns
+        return false
+      })
 
-  }
-
-  protected getParam(param: IParameter) {
-    if (!param.target) {
-      param.target = ''
-    }
-    let pos = param.target.split(':')
-    if (this.source.has(pos[0])) {
-      let value = this.source.get(pos[0])
-
-      for (let p = 1; p < pos.length; p++) {
-        if (value === undefined) {
-          break
-        }
-        value = value[pos[p]]
-      }
-
-      if (param.require === true && value === undefined) {
+      if (result > -1) {
         return FALSE
       }
-
-      let v
-      if (value) {
-        v = Mood.toType(value, param.type)
-      }
-
-      return value !== undefined ? v : null
     }
 
+    return model
+  }
+
+  handleParameter({target, require, type}: IParameter) {
+    if (!target) {
+      target = ''
+    }
+    let pos = target.split('.')
+    const source = pos.shift()
+    let value
+
+    if (this.source.has(source)) {
+      value = this.source.get(source)
+
+      pos.find(p => {
+        if (value === undefined) {
+          return true
+        }
+        value = value[p]
+      })
+    }
+
+    if (require && value === undefined) {
+      return FALSE
+    }
+
+    if (value !== undefined) {
+      if (type === Array) {
+        //todo 增加数组的处理
+      } else {
+        value = typeConvector(value, type)
+      }
+    }
+
+    return value !== undefined ? value : null
   }
 
 }

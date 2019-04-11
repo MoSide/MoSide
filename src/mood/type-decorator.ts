@@ -1,38 +1,31 @@
 import 'reflect-metadata'
 import {IModelProperty} from './model-property.interface'
 import {MetadataArray} from '../utils/metadata-array'
+import {Parameter} from "./parameter.enum";
+import {PARAMETERS} from "./constant";
 
-export let ARRAY_TYPE = 'array_type'
-export let PARAMETERS = 'response:parameters'
-
-export function _TypeDecorator(Type: symbol) {
+export function HttpParameter(paramType: Parameter | string) {
   return function (target: any, propertyKey: string) {
     const type: string = Reflect.getMetadata('design:type', target, propertyKey)
 
     if (type) {
       const p: IModelProperty = {
         property: propertyKey,
-        type: type
+        type
       }
 
-      const parameters: IModelProperty[] = MetadataArray(Type, target)
-      parameters.push(p)
-
-      let types: Set<symbol> = Reflect.getMetadata(PARAMETERS, target)
+      MetadataArray(paramType, target).push(p)
+      let types: Set<string> = Reflect.getMetadata(PARAMETERS, target)
       if (!types) {
         types = new Set()
         Reflect.defineMetadata(PARAMETERS, types, target)
       }
-
-      types.add(Type)
+      types.add(paramType)
     }
   }
 }
 
-export function ArrayType(Type: Object) {
-  return function (target: any, propertyKey: string) {
-    if (Type) {
-      Reflect.defineMetadata(ARRAY_TYPE, Type, target, propertyKey)
-    }
-  }
-}
+export const Query = HttpParameter(Parameter.query)
+export const PathParameter = HttpParameter(Parameter.path)
+export const Body = HttpParameter(Parameter.body)
+

@@ -1,18 +1,12 @@
 import 'reflect-metadata'
 import {IParameter} from "../function-injector/parameter.interface";
 import {MetadataArray} from "../utils/metadata-array";
-import {PARAMETERS} from "./type-decorator";
+import {Parameter} from "./parameter.enum";
+import {PARAMETERS} from "./constant";
 
 function getTarget(method: Parameter, prop: string) {
   return method + '.' + prop
 }
-
-export const enum Parameter {
-  path = 'param',
-  body = 'body',
-  query = 'query'
-}
-
 
 export function Inject(method: Parameter, prop: string) {
   return (target: Object, propertyKey: string, pIndex: number) => {
