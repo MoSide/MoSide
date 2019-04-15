@@ -50,16 +50,29 @@ export class FunctionInjector {
     }
   }
 
-  async resolveAndApply(target: CtrFunc | CtrFunc[]): Promise<any | any[]> {
+  async resolveAndApply(target: CtrFunc | CtrFunc[], stopSignal?: any): Promise<any | any[]> {
     if (Array.isArray(target)) {
-      const result: any = []
+      const result: any[] = []
+      let index = 0
       for (const cFunc of target) {
-        result.push(
-          await this._resolveAndApply(cFunc)
-        )
+        const status = await this._resolveAndApply(cFunc)
+        if (stopSignal !== undefined && status === stopSignal) {
+          return [{
+            status: false,
+            index
+          }]
+        }
+        result.push(status)
+        index++
       }
+
+      result.unshift({
+        status: true
+      })
+
+      return result
     } else {
-      return this._resolveAndApply(target)
+      return await this._resolveAndApply(target)
     }
   }
 

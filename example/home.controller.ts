@@ -1,7 +1,8 @@
 import {ResponseHandler} from '../src/response-handler/response.handler'
 import {Get} from "../src/moside/decorators/HttpMethod";
 import {Controller} from "../src/moside/decorators/Controller";
-import {Inject, Parameter} from "../src/mood/Inject.decorator";
+import {Inject} from "../src/mood/Inject.decorator";
+import {Parameter} from "../src/mood/parameter.enum";
 
 @Controller({
   path: '/'

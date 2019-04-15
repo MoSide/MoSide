@@ -1,16 +1,18 @@
 import {ControllerOptions, IControllerMetadata} from "../controller.interface";
 import {CONTROLLER} from "../symbol";
-import {FunctionInjector} from "../../function-injector/function-injector";
 
 /**
  * 控制器装饰器
  * @param options 控制器选项
  * @constructor
  */
-export function Controller(options: ControllerOptions = {}) {
+export function Controller({path, plugins}: ControllerOptions = {}) {
   return (target: any) => {
     const cMeta = getControllerMetadata(target)
-    cMeta.path = options.path || '/'
+    cMeta.path = path || '/'
+    if (plugins && Array.isArray(plugins)) {
+      cMeta.plugins.push(...plugins)
+    }
   }
 }
 
@@ -24,8 +26,7 @@ export function getControllerMetadata(target: any): IControllerMetadata {
     cMeta = {
       path: '',
       methods: [],
-      providers: [],
-      injector: FunctionInjector.create([])
+      plugins: []
     }
     Reflect.defineMetadata(CONTROLLER, cMeta, target)
   }

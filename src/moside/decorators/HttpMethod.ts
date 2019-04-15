@@ -14,7 +14,8 @@ export function HttpMethod(method: string, path?: string) {
       func: descriptor.value,
       method,
       path: path || prop || '/',
-      key: prop
+      key: prop,
+      plugins: []
     }
 
     setControllerMethodMetadata(target, prop, mMeta)

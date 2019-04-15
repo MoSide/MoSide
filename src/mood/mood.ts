@@ -1,6 +1,5 @@
 import {IModelProperty} from './model-property.interface'
 import {TypeProvider} from '../function-injector/type-provider.interface'
-import {CtrFunc} from '../function-injector/ctr-func'
 import {IParameter} from '../function-injector/parameter.interface'
 import {arrayTypeConvector, typeConvector} from "./utils";
 import {getRequireMetadata} from "./require";
@@ -22,10 +21,9 @@ export class Mood {
     return mood
   }
 
-  resolve(cFunc: CtrFunc): { result: boolean, body?: TypeProvider[] } {
-    const params = cFunc.parameters
+  resolve(parameters: IParameter[]): { result: boolean, body?: TypeProvider[] } {
     const body: TypeProvider[] = []
-    for (let param of params) {
+    for (let param of parameters) {
       if (param.spec === true) {
         const ret = this.handleParameter(param)
         if (ret === FALSE) {
@@ -38,7 +36,6 @@ export class Mood {
           if (ret === false) {
             return {result: false}
           }
-
           body.push({token: ret.constructor, useValue: ret})
         }
       }

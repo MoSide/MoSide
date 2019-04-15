@@ -1,7 +1,9 @@
 import {CtrFunc} from '../function-injector/ctr-func'
-import * as e from 'express'
 import {getControllerMetadata} from "./decorators/Controller";
 import {initController} from "./util/controller";
+import {MosideProcess} from "./util/process";
+import {Moon} from "../moon/moon";
+import {MoodAdapter} from "./util/mood.adapter";
 
 export class Moside {
   proxyHandler: ProxyHandler<Object> = {
@@ -39,20 +41,31 @@ export class Moside {
   }
   private routerList: any[] = []
   private functions: CtrFunc[] = []
-  private expressRouter: e.Router
   private controllers: CtrFunc[] = []
-  private prevPluginList: CtrFunc[] = []
-  private nextPluginList: CtrFunc[] = []
+
+  process: MosideProcess
+  plugin: Moon
 
   protected constructor() {
+    this.plugin = new Moon([
+      new MoodAdapter
+    ])
+
+    this.process = new MosideProcess(
+      this.plugin,
+      this.postErrorMessage.bind(this)
+    )
   }
 
   static create(routerList: any[], e: any): Moside {
     let ret = new Moside()
     ret.routerList = routerList
-    ret.expressRouter = new e.Router()
     ret.onInit()
     return ret
+  }
+
+  postErrorMessage(e: Error) {
+
   }
 
   // static createChildDi(di: FunctionDi, req: e.Request, res: e.Response, next: e.NextFunction) {
@@ -68,10 +81,6 @@ export class Moside {
   //     useValue: origin
   //   }])
   // }
-
-  addPlugins() {
-
-  }
 
   // async plugin_process(di: FunctionDi, type: 'before' | 'after') {
   //   let result = true
@@ -122,14 +131,8 @@ export class Moside {
   //   return await di.resolveAndApply(new CtrFunc(context, target))
   // }
 
-  getRouter() {
-    return this.expressRouter
-  }
-
   private onInit() {
-    initController(this.routerList)
-    this.proxyController()
-    this.createRouter()
+    initController(this.process, this.routerList)
   }
 
   private proxyController() {

@@ -1,9 +1,9 @@
 import {IControllerMetadata} from "../controller.interface";
 import {getControllerMetadata} from "../decorators/Controller";
-import {ctrProcess} from "./process";
+import {MosideProcess} from "./process";
 
 
-export function initController(routerList: any[]) {
+export function initController(process: MosideProcess, routerList: any[]) {
   if (!Array.isArray(routerList)) {
     return []
   }
@@ -14,7 +14,7 @@ export function initController(routerList: any[]) {
     const cMeta: IControllerMetadata = getControllerMetadata(controller)
     const cIns = new controller()
     // 绑定代理
-    bindCtrProxy(cIns)
+    bindCtrProxy(process, cIns)
 
     // 执行onInit
     await runCycleLife('onInit', cIns)
@@ -33,9 +33,9 @@ export function initController(routerList: any[]) {
   return methods
 }
 
-async function runCycleLife(hook: string, context: any) {
+export async function runCycleLife(hook: string, context: any) {
   if (context && typeof context[hook] === 'function') {
-    await context[hook].call(context)
+    return await context[hook].call(context)
   }
 }
 
@@ -47,7 +47,7 @@ function getCtrMethodPath(cPath: string = '', mPath: string = '') {
   }
 }
 
-function bindCtrProxy(ctr: any) {
+function bindCtrProxy(ctrProcess: MosideProcess, ctr: any) {
   const _ctr = ctrProcess.bindHandler(ctr)
   _ctr['index']('1234560')
 }

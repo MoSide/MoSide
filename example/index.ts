@@ -6,11 +6,8 @@ import {HomeController} from "./home.controller";
 import e = require('express');
 
 
-(async () => {
-  let moside = Moside.create([
-    HomeController
-  ], e)
-  server.on('request', app)
-  app.use(moside.getRouter())
-})()
+let moside = Moside.create([
+  HomeController
+], e)
+server.on('request', app)
 

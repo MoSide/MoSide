@@ -1,8 +1,9 @@
-import {FunctionInjector} from "../function-injector/function-injector";
+import {PluginInterface} from "../moon/plugin.interface";
 
 export interface ControllerOptions {
-  providers?: Array<any>;
-  path?: string;
+  providers?: Array<any>
+  path?: string
+  plugins?: PluginInterface[]
 }
 
 export interface IHttpMethodFunction {
@@ -12,8 +13,7 @@ export interface IHttpMethodFunction {
 export interface IControllerMetadata {
   path: string
   methods: IControllerMethodMetadata[]
-  providers: any[]
-  injector: FunctionInjector
+  plugins: PluginInterface[]
 
   [param: string]: any
 }
@@ -23,6 +23,7 @@ export interface IControllerMethodMetadata {
   method: string
   path: string
   key: string
+  plugins: PluginInterface[]
 
   [param: string]: any
 }

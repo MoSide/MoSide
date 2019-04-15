@@ -3,19 +3,17 @@ import {IControllerMetadata, IControllerMethodMetadata} from "../controller.inte
 import {getControllerMetadata} from "../decorators/Controller";
 import {Ctx} from "../ctx";
 import {TypeProvider} from "../../function-injector/type-provider.interface";
-import {CtrFunc} from "../../function-injector/ctr-func";
 import {FunctionInjector} from "../../function-injector/function-injector";
 import {Injectable} from "../../function-injector/Injectable.decorator";
+import {Moon} from "../../moon/moon";
+import {PluginInterface} from "../../moon/plugin.interface";
+import {CtrFunc} from "../../function-injector/ctr-func";
+import {ResponseHandler} from "../../response-handler/response.handler";
+import {runCycleLife} from "./controller";
+import {MethodCtx} from "./method-ctx";
 
-function createMethodInjector(injector: FunctionInjector, {request, response}): FunctionInjector {
-  const ctxProvider: TypeProvider = {
-    token: Ctx,
-    useValue: new Ctx(request, response)
-  }
-  return injector.createChild([ctxProvider])
-}
 
-class Process {
+export class MosideProcess {
 
   proxyHandler: ProxyHandler<Object> = {
     get: (target: Object, p: string, receiver: any): any => {
@@ -30,30 +28,60 @@ class Process {
       }
 
       const cMeta: IControllerMetadata = getControllerMetadata(target)
-      return async (request, response) => {
-        const injector = createMethodInjector(cMeta.injector, {
-          request,
-          response
-        })
+      return async (request, response, next) => {
+        const responseHandler: ResponseHandler = new ResponseHandler(response, next)
+        try {
+          const methodCtx: MethodCtx = new MethodCtx(target, p)
 
-        await injector.resolveAndApply([
-          new CtrFunc(this, 'beforeProcess'),
-          new CtrFunc(this, 'controllerProcess'),
-          new CtrFunc(this, 'afterProcess')
-        ])
+          const injector = createMethodInjector({
+            request,
+            response,
+            responseHandler,
+            methodCtx
+          })
+
+          let result
+
+          result = await this.pluginProcess('before', injector, [
+            ...cMeta.plugins,
+            ...mMeta.plugins
+          ])
+
+          if (!result) {
+            // todo
+            return responseHandler.response()
+          }
+
+          await injector.resolveAndApply(
+            new CtrFunc(this, 'controllerProcess')
+          )
+
+          result = await this.pluginProcess('after', injector, [
+            ...cMeta.plugins,
+            ...mMeta.plugins
+          ])
+
+          if (!result) {
+            // todo
+          }
+
+          responseHandler.response()
+        } catch (e) {
+          const result = await runCycleLife('onError', target)
+          if (result !== false) {
+            this.errorHook(e)
+            // todo resp error
+          }
+        }
       }
     }
   }
 
-  @Injectable
-  beforeProcess() {
+  constructor(private moon: Moon, private errorHook: Function) {
   }
 
-  @Injectable
-  afterProcess() {
-  }
-
-  pluginProcess(stage: 'before' | 'after') {
+  async pluginProcess(stage: 'before' | 'after', injector: FunctionInjector, extraPlugins: PluginInterface[]): Promise<boolean> {
+    return await this.moon.run(stage, injector, extraPlugins)
   }
 
   @Injectable
@@ -67,4 +95,32 @@ class Process {
 
 }
 
-export const ctrProcess = new Process()
+function createMethodInjector({request, response, responseHandler, methodCtx}): FunctionInjector {
+  const ctxProvider: TypeProvider = {
+    token: Ctx,
+    useValue: new Ctx(request, response)
+  }
+
+  const respHandlerProvider: TypeProvider = {
+    token: responseHandler.constructor,
+    useValue: responseHandler
+  }
+
+  const respHandlerProvider2: TypeProvider = {
+    token: ResponseHandler,
+    useValue: responseHandler
+  }
+
+  const methodCtxProvider: TypeProvider = {
+    token: MethodCtx,
+    useValue: methodCtx
+  }
+
+  return FunctionInjector.create([
+    ctxProvider,
+    respHandlerProvider,
+    respHandlerProvider2,
+    methodCtxProvider
+  ])
+}
+
