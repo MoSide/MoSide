@@ -8,7 +8,7 @@ import {Injectable} from "../../function-injector/Injectable.decorator";
 import {Moon} from "../../moon/moon";
 import {PluginInterface} from "../../moon/plugin.interface";
 import {CtrFunc} from "../../function-injector/ctr-func";
-import {ResponseHandler} from "../../response-handler/response.handler";
+import {MoResponse} from "../../response-handler/moResponse";
 import {runCycleLife} from "./controller";
 import {MethodCtx} from "./method-ctx";
 
@@ -29,7 +29,7 @@ export class MosideProcess {
 
       const cMeta: IControllerMetadata = getControllerMetadata(target)
       return async (request, response, next) => {
-        const responseHandler: ResponseHandler = new ResponseHandler(response, next)
+        const responseHandler: MoResponse = new MoResponse(response, next)
         try {
           const methodCtx: MethodCtx = new MethodCtx(target, p)
 
@@ -107,7 +107,7 @@ function createMethodInjector({request, response, responseHandler, methodCtx}): 
   }
 
   const respHandlerProvider2: TypeProvider = {
-    token: ResponseHandler,
+    token: MoResponse,
     useValue: responseHandler
   }
 

@@ -4,6 +4,8 @@ import {initController} from "./util/controller";
 import {MosideProcess} from "./util/process";
 import {Moon} from "../moon/moon";
 import {MoodAdapter} from "./util/mood.adapter";
+import {Framework} from "./framework.interface";
+import {ExpressAdapter} from "./util/express.adapter";
 
 export class Moside {
   proxyHandler: ProxyHandler<Object> = {
@@ -12,7 +14,7 @@ export class Moside {
     //   try {
     //     let cDi = Moside.createChildDi(di, req, res, next)
     //     let cFunc: CtrFunc = cDi.get(CtrFunc)
-    //     let responseHandler: ResponseHandler = cDi.get(ResponseHandler)
+    //     let responseHandler: MoResponse = cDi.get(MoResponse)
     //     logger.info(`run prev plugins`)
     //     const result = await this.plugin_process(cDi, 'before')
     //
@@ -40,6 +42,7 @@ export class Moside {
     // }
   }
   private routerList: any[] = []
+  private adapter: Framework
   private functions: CtrFunc[] = []
   private controllers: CtrFunc[] = []
 
@@ -55,6 +58,8 @@ export class Moside {
       this.plugin,
       this.postErrorMessage.bind(this)
     )
+
+    this.adapter = new ExpressAdapter()
   }
 
   static create(routerList: any[], e: any): Moside {
@@ -67,20 +72,6 @@ export class Moside {
   postErrorMessage(e: Error) {
 
   }
-
-  // static createChildDi(di: FunctionDi, req: e.Request, res: e.Response, next: e.NextFunction) {
-  //   let cFunc: CtrFunc = di.get(CtrFunc)
-  //   const resMsg = getResMsg(cFunc)
-  //   let responseHandler = new ResponseHandler(res, next, resMsg)
-  //   const origin = new Origin(req, res)
-  //   return di.createChild([{
-  //     type: ResponseHandler,
-  //     useValue: responseHandler
-  //   }, {
-  //     type: Origin,
-  //     useValue: origin
-  //   }])
-  // }
 
   // async plugin_process(di: FunctionDi, type: 'before' | 'after') {
   //   let result = true
@@ -102,10 +93,10 @@ export class Moside {
   //   return result
   // }
 
-  // async controller_process(di: FunctionDi, target, context): Promise<ResponseHandler> {
+  // async controller_process(di: FunctionDi, target, context): Promise<MoResponse> {
   //   const cFunc: CtrFunc = di.get(CtrFunc)
   //   const origin: Origin = di.get(Origin)
-  //   const responseHandler: ResponseHandler = di.get(ResponseHandler)
+  //   const responseHandler: MoResponse = di.get(MoResponse)
   //   const providers: Set<any> = Reflect.getMetadata(PROVIDER_LIST, cFunc.Class.constructor)
   //   logger.debug(`body:`, origin.request.body)
   //   logger.debug(`params:`, origin.request.params)
