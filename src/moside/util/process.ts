@@ -70,6 +70,7 @@ export class MosideProcess {
           const result = await runCycleLife('onError', target)
           if (result !== false) {
             this.errorHook(e)
+            next(e)
             // todo resp error
           }
         }

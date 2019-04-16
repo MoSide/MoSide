@@ -1,9 +1,11 @@
+import {IHttpMethod} from "./method.interface";
+
 export interface Framework {
   request(params: any[]): RequestAdapter
 
   response(params: any[]): ResponseAdapter
 
-  router(routerList: any[])
+  router(methods: IHttpMethod[])
 }
 
 export interface ResponseAdapter {

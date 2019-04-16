@@ -5,21 +5,15 @@ configure({
     console: {
       type: 'console'
     },
-    app: {
-      type: 'dateFile',
-      filename: 'log/app',
-      pattern: '-yyyy-MM-dd.log',
-      alwaysIncludePattern: true
-    }
   },
   categories: {
     default: {
-      appenders: ['console', 'app'],
+      appenders: ['console'],
       level: 'trace'
     }
   },
   pm2: true
 })
 
-export const logger = getLogger('KINGMAY')
+export const logger = getLogger('MoSide')
 logger.level = process.env.NODE_ENV === 'production' ? 'info' : 'debug'

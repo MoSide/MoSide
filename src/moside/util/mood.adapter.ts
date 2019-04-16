@@ -3,9 +3,11 @@ import {FunctionInjector} from "../../function-injector/function-injector";
 import {MethodCtx} from "./method-ctx";
 import {Mood} from "../../mood/mood";
 import {Ctx} from "../ctx";
+import {Injectable} from "../../function-injector/Injectable.decorator";
 
 export class MoodAdapter implements PluginInterface {
 
+  @Injectable
   beforeController(
     injector: FunctionInjector,
     {request: {param = {}, query = {}, body = {}}}: Ctx,

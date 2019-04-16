@@ -51,7 +51,7 @@ export class CtrFunc {
     return this.getMetadata('design:paramtypes')
   }
 
-  apply(params: any[]) {
+  apply(...params: any[]) {
     Reflect.apply(this.func, this.context, params)
   }
 }

@@ -1,15 +1,13 @@
 import {CtrFunc} from "../../function-injector/ctr-func";
 
 export class MethodCtx extends CtrFunc {
+
+  // todo 调整设计模式
+  constructor(context: Object, prop: string) {
+    super(context, prop)
+  }
+
   get func(): never {
-    throw Error(`Method Ctx does not support this method`)
-  }
-
-  get context(): never {
-    throw Error(`Method Ctx does not support this method`)
-  }
-
-  get prop(): never {
     throw Error(`Method Ctx does not support this method`)
   }
 
