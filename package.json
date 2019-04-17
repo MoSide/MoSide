@@ -1,6 +1,6 @@
 {
   "name": "@moside/moside",
-  "version": "0.3.1-a",
+  "version": "0.5.0-a",
   "description": "decorator风格web api框架",
   "main": "index.ts",
   "keywords": [
@@ -9,7 +9,7 @@
   "author": "moside-yskun",
   "repository": {
     "type": "github",
-    "url": "https://github.com/MoSide/moSide"
+    "url": "https://github.com/MoSide/MoSide"
   },
   "private": false,
   "license": "MIT",
