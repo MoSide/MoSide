@@ -1,5 +1,5 @@
 import {createServer} from 'http'
-import {logger} from '../util/common/logger'
+import {logger} from '../src/utils/logger'
 
 export const server = createServer()
 server.listen(8081, '0.0.0.0')

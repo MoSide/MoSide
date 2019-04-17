@@ -1,14 +1,14 @@
 import 'reflect-metadata'
-import e = require('express')
 import {server} from './server'
 import {app} from './express'
-import {Moside} from '../util/moside/moside'
-import {routerList} from './router-list'
+import {Moside} from '../src/moside/moside'
+import {HomeController} from "./home.controller";
 
-
-(async () => {
-  let moside = Moside.create(routerList, e)
-  server.on('request', app)
+Moside.create([
+  HomeController
+]).then(moside => {
   app.use(moside.getRouter())
-})()
+  server.on('request', app)
+})
+
 
