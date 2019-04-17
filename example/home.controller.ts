@@ -9,7 +9,9 @@ export class HomeController {
 
   @Get('/')
   index(res: MoResponse) {
-    res.body('hello world')
+    res.body({
+      message: 'hello world'
+    })
   }
 
 }

@@ -19,8 +19,10 @@ export class MoodAdapter implements PluginInterface {
       ['body', body]
     ])
     const resolveResult = mood.resolve(parameters)
-    if (resolveResult.result && resolveResult.body) {
-      injector.push(resolveResult.body)
+    if (resolveResult.result) {
+      if (resolveResult.body) {
+        injector.push(resolveResult.body)
+      }
       return true
     } else {
       return false

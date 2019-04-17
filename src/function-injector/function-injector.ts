@@ -15,7 +15,7 @@ export class FunctionInjector {
   static create(providers: TypeProvider[], throwError: boolean = true): FunctionInjector {
     const fun = new FunctionInjector()
     fun.THROW_ERROR = throwError
-    fun.push([{token: FunctionInjector, useValue: this}, ...providers])
+    fun.push([{token: FunctionInjector, useValue: fun}, ...providers])
     return fun
   }
 

@@ -22,3 +22,5 @@
 npm i
 npm run dev
 ```
+
+然后 ->_-> http://localhost:8081

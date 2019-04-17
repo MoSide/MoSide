@@ -30,23 +30,27 @@ export class ExpressAdapter implements Framework {
     const router = e.Router()
     methods.forEach(({method, path, target}) => {
       logger.info(`creating router`, method, path, target.context.constructor.name, target.prop)
-      const targetApply = target.apply.bind(target)
+
+      function targetCall(...params: any[]) {
+        return target.apply(params)
+      }
+
       switch (method) {
         case 'get':
-          router.get(path, targetApply)
+          router.get(path, targetCall)
           break
         case 'post':
-          router.post(path, targetApply)
+          router.post(path, targetCall)
           break
         case 'del':
-          router.delete(path, targetApply)
+          router.delete(path, targetCall)
           break
         case 'put':
-          router.put(path, targetApply)
+          router.put(path, targetCall)
           break
         default:
           if (router[method]) {
-            router[method](path, targetApply)
+            router[method](path, targetCall)
           } else {
             console.log(`something wrong`, method, path, target)
           }

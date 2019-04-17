@@ -4,7 +4,6 @@ import {getControllerMetadata} from "../decorators/Controller";
 import {Ctx} from "../ctx";
 import {TypeProvider} from "../../function-injector/type-provider.interface";
 import {FunctionInjector} from "../../function-injector/function-injector";
-import {Injectable} from "../../function-injector/Injectable.decorator";
 import {Moon} from "../../moon/moon";
 import {PluginInterface} from "../../moon/plugin.interface";
 import {CtrFunc} from "../../function-injector/ctr-func";
@@ -53,7 +52,7 @@ export class MosideProcess {
           }
 
           await injector.resolveAndApply(
-            new CtrFunc(this, 'controllerProcess')
+            new CtrFunc(target, p)
           )
 
           result = await this.pluginProcess('after', injector, [
@@ -83,11 +82,6 @@ export class MosideProcess {
 
   async pluginProcess(stage: 'before' | 'after', injector: FunctionInjector, extraPlugins: PluginInterface[]): Promise<boolean> {
     return await this.moon.run(stage, injector, extraPlugins)
-  }
-
-  @Injectable
-  controllerProcess() {
-
   }
 
   bindHandler(ctr: any) {
