@@ -21,8 +21,6 @@ yarn-error.log*
 *.sln
 *.sw*
 
-*.d.ts
-*.js.map
 *.log
 
 !/test/*
