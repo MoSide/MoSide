@@ -2,7 +2,8 @@
   "name": "@moside/moside",
   "version": "0.5.1-a",
   "description": "decorator风格web api框架",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "keywords": [
     "moside"
   ],
@@ -15,27 +16,24 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon --watch ./example --ext ts --exec ts-node ./example",
-    "test": "ts-node $NODE_DEBUG_OPTION ./src"
+    "debug": "ts-node $NODE_DEBUG_OPTION ./src",
+    "build": "gulp relase",
+    "clean": "gulp clean"
   },
   "devDependencies": {
-    "@types/body-parser": "^1.17.0",
-    "@types/cookie-parser": "^1.4.1",
-    "@types/cookie-session": "^2.0.36",
     "@types/express": "^4.16.0",
     "@types/log4js": "^2.3.5",
     "@types/node": "^10.12.3",
-    "@types/qs": "^6.5.1",
+    "del": "^4.1.1",
+    "gulp": "^4.0.2",
+    "gulp-typescript": "^5.0.1",
     "nodemon": "^1.18.6",
     "ts-node": "^7.0.1",
-    "typescript": "^3.1.6"
+    "typescript": "^3.4.5"
   },
   "dependencies": {
-    "body-parser": "^1.18.3",
-    "cookie-parser": "^1.4.3",
-    "cookie-session": "^2.0.0-beta.3",
     "express": "^4.16.4",
     "log4js": "^3.0.6",
-    "mongoose": "^5.3.10",
     "reflect-metadata": "^0.1.12"
   }
 }
