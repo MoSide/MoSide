@@ -1,25 +1,40 @@
-import {getControllerMetadata} from "./Controller";
-import {IControllerMethodMetadata, IHttpMethodFunction} from "../controller.interface";
-import {METHOD} from "../symbol";
-import {Injectable} from "../../function-injector/Injectable.decorator";
+import 'reflect-metadata'
+import {getControllerMetadata} from './Controller'
+import {IControllerMethodMetadata, IHttpMethodFunction} from '../controller.interface'
+import {METHOD} from '../symbol'
+import {Injectable} from '../../function-injector/Injectable.decorator'
+
+function setHttpMethodMeta(target: Object, prop: string, descriptor: PropertyDescriptor, method: string, path?: string) {
+
+  Injectable(target, prop)
+
+  const cMeta = getControllerMetadata(target.constructor)
+
+  const mMeta: IControllerMethodMetadata = {
+    func: descriptor.value,
+    method,
+    path: path || prop || '/',
+    key: prop,
+    plugins: []
+  }
+
+  setControllerMethodMetadata(target, prop, mMeta)
+  cMeta.methods.push(mMeta)
+}
+
+export function Http(target: Object, prop: string, descriptor: PropertyDescriptor) {
+  const methodSplit = /^(\w+?)::(.*?)$/
+  let [_, method, path] = prop.split(methodSplit)
+  if (_) {
+    method = 'get'
+    path = _
+  }
+  setHttpMethodMeta(target, prop, descriptor, method, path)
+}
 
 export function HttpMethod(method: string, path?: string) {
   return (target: Object, prop: string, descriptor: PropertyDescriptor) => {
-
-    Injectable(target, prop)
-
-    const cMeta = getControllerMetadata(target.constructor)
-
-    const mMeta: IControllerMethodMetadata = {
-      func: descriptor.value,
-      method,
-      path: path || prop || '/',
-      key: prop,
-      plugins: []
-    }
-
-    setControllerMethodMetadata(target, prop, mMeta)
-    cMeta.methods.push(mMeta)
+    setHttpMethodMeta(target, prop, descriptor, method, path)
   }
 }
 
