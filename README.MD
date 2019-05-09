@@ -24,3 +24,24 @@ npm run dev
 ```
 
 然后 ->_-> http://localhost:8081
+
+## 简洁的控制器风格
+
+在Moside中，推荐使用ES6 class风格进行编写。
+```TypeScript
+@Controller({
+  path: '/'
+})
+export class HomeController {
+  @PluginA('...')
+  @PluginB('...')
+  @Get('/')
+  index(res: MoResponse) {
+    res.body({
+      message: 'hello world'
+    })
+  }
+}
+```
+
+

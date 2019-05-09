@@ -1,10 +1,10 @@
-import {initController} from "./util/controller";
-import {MosideProcess} from "./util/process";
-import {Moon} from "../moon/moon";
-import {MoodAdapter} from "./util/mood.adapter";
-import {Framework} from "./framework.interface";
-import {ExpressAdapter} from "./util/express.adapter";
-import {IHttpMethod} from "./method.interface";
+import {initController} from './util/controller'
+import {MosideProcess} from './util/process'
+import {Moon} from '../moon/moon'
+import {MoodAdapter} from './util/mood.adapter'
+import {Framework} from './framework.interface'
+import {ExpressAdapter} from './util/express.adapter'
+import {IHttpMethod} from './method.interface'
 
 export class Moside {
   private routerList: any[] = []
@@ -28,7 +28,7 @@ export class Moside {
   }
 
   static async create(routerList: any[]): Promise<Moside> {
-    let ret = new Moside()
+    const ret = new Moside()
     ret.routerList = routerList
     await ret.onInit()
     return ret
