@@ -1,0 +1,10 @@
+import 'reflect-metadata';
+import { IHttpMethodFunction } from '../controller.interface';
+export declare function Http(target: Object, prop: string, descriptor: PropertyDescriptor): void;
+export declare function HttpMethod(method: string, path?: string): (target: Object, prop: string, descriptor: PropertyDescriptor) => void;
+export declare function getControllerMethodMetadata(target: Object, prop: string): any;
+export declare const Get: IHttpMethodFunction;
+export declare const Post: IHttpMethodFunction;
+export declare const Put: IHttpMethodFunction;
+export declare const Del: IHttpMethodFunction;
+export declare const Head: IHttpMethodFunction;
