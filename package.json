@@ -1,6 +1,6 @@
 {
   "name": "@moside/moside",
-  "version": "0.5.1-a",
+  "version": "0.5.2-a",
   "description": "decorator风格web api框架",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,7 +17,7 @@
   "scripts": {
     "dev": "nodemon --watch ./example --ext ts --exec ts-node ./example",
     "debug": "ts-node $NODE_DEBUG_OPTION ./src",
-    "build": "gulp relase",
+    "build": "gulp release",
     "clean": "gulp clean"
   },
   "devDependencies": {
