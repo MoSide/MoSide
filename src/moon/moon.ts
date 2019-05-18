@@ -1,6 +1,6 @@
-import {PluginInterface} from "./plugin.interface";
-import {FunctionInjector} from "../function-injector/function-injector";
-import {CtrFunc} from "../function-injector/ctr-func";
+import { PluginInterface } from './plugin.interface'
+import { FunctionInjector } from '../function-injector/function-injector'
+import { CtrFunc } from '../function-injector/ctr-func'
 
 export class Moon {
 
