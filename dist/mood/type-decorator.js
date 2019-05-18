@@ -12,10 +12,10 @@ function HttpParameter(paramType) {
                 type
             };
             metadata_array_1.MetadataArray(paramType, target).push(p);
-            let types = Reflect.getMetadata(constant_1.PARAMETERS, target);
+            let types = Reflect.getMetadata(constant_1.MOOD_PARAMETERS, target);
             if (!types) {
                 types = new Set();
-                Reflect.defineMetadata(constant_1.PARAMETERS, types, target);
+                Reflect.defineMetadata(constant_1.MOOD_PARAMETERS, types, target);
             }
             types.add(paramType);
         }
@@ -23,5 +23,5 @@ function HttpParameter(paramType) {
 }
 exports.HttpParameter = HttpParameter;
 exports.Query = HttpParameter("query" /* query */);
-exports.PathParameter = HttpParameter("param" /* path */);
+exports.PathParameter = HttpParameter("params" /* path */);
 exports.Body = HttpParameter("body" /* body */);

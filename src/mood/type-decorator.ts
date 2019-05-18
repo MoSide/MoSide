@@ -1,8 +1,8 @@
 import 'reflect-metadata'
-import {IModelProperty} from './model-property.interface'
-import {MetadataArray} from '../utils/metadata-array'
-import {Parameter} from "./parameter.enum";
-import {PARAMETERS} from "./constant";
+import { IModelProperty } from './model-property.interface'
+import { MetadataArray } from '../utils/metadata-array'
+import { Parameter } from './parameter.enum'
+import { MOOD_PARAMETERS } from './constant'
 
 export function HttpParameter(paramType: Parameter | string) {
   return function (target: any, propertyKey: string) {
@@ -15,10 +15,10 @@ export function HttpParameter(paramType: Parameter | string) {
       }
 
       MetadataArray(paramType, target).push(p)
-      let types: Set<string> = Reflect.getMetadata(PARAMETERS, target)
+      let types: Set<string> = Reflect.getMetadata(MOOD_PARAMETERS, target)
       if (!types) {
         types = new Set()
-        Reflect.defineMetadata(PARAMETERS, types, target)
+        Reflect.defineMetadata(MOOD_PARAMETERS, types, target)
       }
       types.add(paramType)
     }

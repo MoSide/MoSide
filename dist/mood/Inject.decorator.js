@@ -10,7 +10,7 @@ function Inject(method, prop) {
     return (target, propertyKey, pIndex) => {
         const targetPoint = getTarget(method, prop);
         const param = Reflect.getMetadata('design:paramtypes', target, propertyKey);
-        metadata_array_1.MetadataArray(constant_1.PARAMETERS, target, propertyKey).push({
+        metadata_array_1.MetadataArray(constant_1.MOOD_PARAMETERS, target, propertyKey).push({
             token: targetPoint,
             type: param[pIndex],
             index: pIndex,

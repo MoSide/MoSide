@@ -1,9 +1,9 @@
-import {MODEL} from "./constant";
+import { MOOD_MODEL } from './constant'
 
 export function Model(target: Object) {
-  Reflect.defineMetadata(MODEL, true, target)
+  Reflect.defineMetadata(MOOD_MODEL, true, target)
 }
 
 export function getModelMeta(target: Object): boolean {
-  return Reflect.getMetadata(MODEL, target) || false
+  return Reflect.getMetadata(MOOD_MODEL, target) || false
 }
