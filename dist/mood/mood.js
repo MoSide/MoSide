@@ -38,7 +38,7 @@ class Mood {
     }
     handleModel(Model) {
         const model = new Model();
-        const metaKeys = Reflect.getMetadata(constant_1.PARAMETERS, model);
+        const metaKeys = Reflect.getMetadata(constant_1.MOOD_PARAMETERS, model);
         //获取需要的属性
         for (const key of metaKeys) {
             let parameters = Reflect.getMetadata(key, model);

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
-const symbol_1 = require("../moside/symbol");
+const constant_1 = require("../mood/constant");
 class CtrFunc {
     constructor(context, prop) {
         this.context = context;
@@ -13,7 +13,7 @@ class CtrFunc {
             if (!parameters) {
                 throw new Error(`the func ${this.targetType.name}(${this.prop}) has not decorate by Injectable`);
             }
-            const specParams = this.getMetadata(symbol_1.PARAMETERS);
+            const specParams = this.getMetadata(constant_1.MOOD_PARAMETERS);
             this._parameters = new Array(...parameters);
             if (specParams && Array.isArray(specParams)) {
                 specParams.forEach(param => {
@@ -39,7 +39,7 @@ class CtrFunc {
         return this.getMetadata('design:paramtypes');
     }
     apply(params) {
-        Reflect.apply(this.func, this.context, params);
+        return Reflect.apply(this.func, this.context, params);
     }
 }
 exports.CtrFunc = CtrFunc;

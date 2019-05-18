@@ -13,10 +13,11 @@ const function_injector_1 = require("../../function-injector");
 const method_ctx_1 = require("./method-ctx");
 const mood_1 = require("../../mood/mood");
 const ctx_1 = require("../ctx");
+const response_handler_1 = require("../../response-handler");
 class MoodAdapter {
-    beforeController(injector, { request: { param = {}, query = {}, body = {} } }, { parameters }) {
+    beforeController(injector, { request: { params = {}, query = {}, body = {} } }, { parameters }, response) {
         const mood = mood_1.Mood.create([
-            ['param', param],
+            ['params', params],
             ['query', query],
             ['body', body]
         ]);
@@ -28,6 +29,10 @@ class MoodAdapter {
             return true;
         }
         else {
+            response.body({
+                status: 10001,
+                message: 'Can not resolve all params'
+            });
             return false;
         }
     }
@@ -37,7 +42,8 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [function_injector_1.FunctionInjector,
         ctx_1.Ctx,
-        method_ctx_1.MethodCtx]),
+        method_ctx_1.MethodCtx,
+        response_handler_1.Response]),
     __metadata("design:returntype", void 0)
 ], MoodAdapter.prototype, "beforeController", null);
 exports.MoodAdapter = MoodAdapter;

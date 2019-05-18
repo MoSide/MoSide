@@ -11,5 +11,5 @@ export declare class CtrFunc {
     getMetadata(key: string | symbol): any;
     setMetadata(key: string | symbol, meta: any): void;
     getOriginParams(): any[];
-    apply(params: any[]): void;
+    apply(params: any[]): any;
 }
