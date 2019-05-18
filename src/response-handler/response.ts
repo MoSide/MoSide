@@ -1,7 +1,7 @@
-import {Ctx} from "../moside/ctx";
-import {ResponseAdapter} from "../moside/framework.interface";
+import { Ctx } from '../moside/ctx'
+import { ResponseAdapter } from '../moside/framework.interface'
 
-export class MoResponse {
+export class Response {
 
   private _httpStatus: number = -1
   private _body: any
@@ -21,17 +21,17 @@ export class MoResponse {
     return this
   }
 
-  status(status: number): MoResponse {
+  status(status: number): Response {
     this._httpStatus = status
     return this
   }
 
-  body(body: any): MoResponse {
+  body(body: any): Response {
     this._body = body
     return this
   }
 
-  error(error: any): MoResponse {
+  error(error: any): Response {
     this._error = error
     return this
   }

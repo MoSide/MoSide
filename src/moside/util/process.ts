@@ -1,15 +1,15 @@
-import {getControllerMethodMetadata} from "../decorators/HttpMethod";
-import {IControllerMetadata, IControllerMethodMetadata} from "../controller.interface";
-import {getControllerMetadata} from "../decorators/Controller";
-import {Ctx} from "../ctx";
-import {TypeProvider} from "../../function-injector/type-provider.interface";
-import {FunctionInjector} from "../../function-injector/function-injector";
-import {Moon} from "../../moon/moon";
-import {PluginInterface} from "../../moon/plugin.interface";
-import {CtrFunc} from "../../function-injector/ctr-func";
-import {MoResponse} from "../../response-handler/moResponse";
-import {runCycleLife} from "./controller";
-import {MethodCtx} from "./method-ctx";
+import { getControllerMethodMetadata } from '../decorators/HttpMethod'
+import { IControllerMetadata, IControllerMethodMetadata } from '../controller.interface'
+import { getControllerMetadata } from '../decorators/Controller'
+import { Ctx } from '../ctx'
+import { TypeProvider } from '../../function-injector/type-provider.interface'
+import { FunctionInjector } from '../../function-injector/function-injector'
+import { Moon } from '../../moon/moon'
+import { PluginInterface } from '../../moon/plugin.interface'
+import { CtrFunc } from '../../function-injector/ctr-func'
+import { Response } from '../../response-handler/response'
+import { runCycleLife } from './controller'
+import { MethodCtx } from './method-ctx'
 
 
 export class MosideProcess {
@@ -28,7 +28,7 @@ export class MosideProcess {
 
       const cMeta: IControllerMetadata = getControllerMetadata(target)
       return async (request, response, next) => {
-        const responseHandler: MoResponse = new MoResponse(response, next)
+        const responseHandler: Response = new Response(response, next)
         try {
           const methodCtx: MethodCtx = new MethodCtx(target, p)
 
@@ -102,7 +102,7 @@ function createMethodInjector({request, response, responseHandler, methodCtx}): 
   }
 
   const respHandlerProvider2: TypeProvider = {
-    token: MoResponse,
+    token: Response,
     useValue: responseHandler
   }
 
