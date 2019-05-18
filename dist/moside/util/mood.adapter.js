@@ -9,11 +9,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const function_injector_1 = require("../../function-injector/function-injector");
+const function_injector_1 = require("../../function-injector");
 const method_ctx_1 = require("./method-ctx");
 const mood_1 = require("../../mood/mood");
 const ctx_1 = require("../ctx");
-const Injectable_decorator_1 = require("../../function-injector/Injectable.decorator");
 class MoodAdapter {
     beforeController(injector, { request: { param = {}, query = {}, body = {} } }, { parameters }) {
         const mood = mood_1.Mood.create([
@@ -34,7 +33,7 @@ class MoodAdapter {
     }
 }
 __decorate([
-    Injectable_decorator_1.Injectable,
+    function_injector_1.Injectable,
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [function_injector_1.FunctionInjector,
         ctx_1.Ctx,

@@ -1,6 +1,6 @@
-import { FunctionInjector } from "../../function-injector/function-injector";
-import { Moon } from "../../moon/moon";
-import { PluginInterface } from "../../moon/plugin.interface";
+import { FunctionInjector } from '../../function-injector/function-injector';
+import { Moon } from '../../moon/moon';
+import { PluginInterface } from '../../moon/plugin.interface';
 export declare class MosideProcess {
     private moon;
     private errorHook;

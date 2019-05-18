@@ -1,3 +1,3 @@
-import {PluginInterface} from './plugin.interface'
+import { PluginInterface } from './plugin.interface'
 
-export {PluginInterface}
+export { PluginInterface }

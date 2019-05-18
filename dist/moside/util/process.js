@@ -13,7 +13,7 @@ const Controller_1 = require("../decorators/Controller");
 const ctx_1 = require("../ctx");
 const function_injector_1 = require("../../function-injector/function-injector");
 const ctr_func_1 = require("../../function-injector/ctr-func");
-const moResponse_1 = require("../../response-handler/moResponse");
+const response_1 = require("../../response-handler/response");
 const controller_1 = require("./controller");
 const method_ctx_1 = require("./method-ctx");
 class MosideProcess {
@@ -32,7 +32,7 @@ class MosideProcess {
                 }
                 const cMeta = Controller_1.getControllerMetadata(target);
                 return (request, response, next) => __awaiter(this, void 0, void 0, function* () {
-                    const responseHandler = new moResponse_1.MoResponse(response, next);
+                    const responseHandler = new response_1.Response(response, next);
                     try {
                         const methodCtx = new method_ctx_1.MethodCtx(target, p);
                         const injector = createMethodInjector({
@@ -92,7 +92,7 @@ function createMethodInjector({ request, response, responseHandler, methodCtx })
         useValue: responseHandler
     };
     const respHandlerProvider2 = {
-        token: moResponse_1.MoResponse,
+        token: response_1.Response,
         useValue: responseHandler
     };
     const methodCtxProvider = {

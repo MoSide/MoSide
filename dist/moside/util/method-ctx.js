@@ -1,19 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const ctr_func_1 = require("../../function-injector/ctr-func");
-class MethodCtx extends ctr_func_1.CtrFunc {
-    // todo 调整设计模式
+const function_injector_1 = require("../../function-injector");
+class MethodCtx {
     constructor(context, prop) {
-        super(context, prop);
+        this.ctx = new function_injector_1.CtrFunc(context, prop);
     }
-    get func() {
-        throw Error(`Method Ctx does not support this method`);
+    get parameters() {
+        return this.ctx.parameters;
     }
-    apply(params) {
-        throw Error(`Method Ctx does not support this method`);
+    getMetadata(key) {
+        return this.ctx.getMetadata(key);
     }
-    setMetadata(key, meta) {
-        throw Error(`Method Ctx does not support this method`);
+    getOriginParams() {
+        return this.ctx.getOriginParams();
     }
 }
 exports.MethodCtx = MethodCtx;
