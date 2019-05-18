@@ -1,22 +1,23 @@
-import {CtrFunc} from "../../function-injector/ctr-func";
+import { CtrFunc } from '../../function-injector'
+import { IParameter } from '../../function-injector/parameter.interface'
 
-export class MethodCtx extends CtrFunc {
+export class MethodCtx {
 
-  // todo 调整设计模式
+  private ctx: CtrFunc
+
   constructor(context: Object, prop: string) {
-    super(context, prop)
+    this.ctx = new CtrFunc(context, prop)
   }
 
-  get func(): never {
-    throw Error(`Method Ctx does not support this method`)
+  get parameters(): IParameter[] {
+    return this.ctx.parameters
   }
 
-  apply(params: any[]): never {
-    throw Error(`Method Ctx does not support this method`)
+  getMetadata(key: string | symbol) {
+    return this.ctx.getMetadata(key)
   }
 
-  setMetadata(key: string | symbol, meta: any): never {
-    throw Error(`Method Ctx does not support this method`)
+  getOriginParams(): any[] {
+    return this.ctx.getOriginParams()
   }
-
 }

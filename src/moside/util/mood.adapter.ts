@@ -1,9 +1,8 @@
-import {PluginInterface} from "../../moon/plugin.interface";
-import {FunctionInjector} from "../../function-injector/function-injector";
-import {MethodCtx} from "./method-ctx";
-import {Mood} from "../../mood/mood";
-import {Ctx} from "../ctx";
-import {Injectable} from "../../function-injector/Injectable.decorator";
+import { PluginInterface } from '../../moon'
+import { FunctionInjector, Injectable } from '../../function-injector'
+import { MethodCtx } from './method-ctx'
+import { Mood } from '../../mood/mood'
+import { Ctx } from '../ctx'
 
 export class MoodAdapter implements PluginInterface {
 

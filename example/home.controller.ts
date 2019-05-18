@@ -1,6 +1,5 @@
-import {Http} from '../src/moside/decorators/HttpMethod'
-import {Controller} from '../src/moside/decorators/Controller'
-import {MoResponse} from '../src/response-handler/moResponse'
+import { Controller, Http } from '../src/moside'
+import { Response } from '../src/response-handler'
 
 @Controller({
   path: '/'
@@ -8,7 +7,7 @@ import {MoResponse} from '../src/response-handler/moResponse'
 export class HomeController {
 
   @Http
-  '/hello'(res: MoResponse) {
+  '/hello'(res: Response) {
     res.body({
       message: 'hello world'
     })

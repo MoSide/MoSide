@@ -1,3 +1,3 @@
-import {MoResponse} from './moResponse'
+import { Response } from './response'
 
-export {MoResponse}
+export { Response }
