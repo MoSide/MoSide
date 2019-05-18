@@ -1,5 +1,5 @@
 export declare const enum Parameter {
-    path = "param",
+    path = "params",
     body = "body",
     query = "query"
 }

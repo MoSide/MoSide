@@ -24,7 +24,6 @@ export declare class Response {
 
   response(): void;
 }
-
 /**
  * Created by yskun on 2017/4/18.
  */

@@ -1,6 +1,5 @@
 'use strict'
 Object.defineProperty(exports, '__esModule', {value: true})
-
 class Response {
   constructor(responseAdapter, ctx) {
     this.responseAdapter = responseAdapter

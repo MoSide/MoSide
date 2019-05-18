@@ -1,5 +1,5 @@
-import { PluginInterface } from "./plugin.interface";
-import { FunctionInjector } from "../function-injector/function-injector";
+import { PluginInterface } from './plugin.interface';
+import { FunctionInjector } from '../function-injector/function-injector';
 export declare class Moon {
     private plugins;
     constructor(plugins?: PluginInterface[]);
