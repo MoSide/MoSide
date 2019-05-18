@@ -1,11 +1,11 @@
-import {IModelProperty} from './model-property.interface'
-import {TypeProvider} from '../function-injector/type-provider.interface'
-import {IParameter} from '../function-injector/parameter.interface'
-import {arrayTypeConvector, typeConvector} from "./utils";
-import {getRequireMetadata} from "./require";
-import {getArrayTypeMeta} from "./mood-decorator";
-import {PARAMETERS} from "./constant";
-import {getModelMeta} from "./Model.decorator";
+import { IModelProperty } from './model-property.interface'
+import { TypeProvider } from '../function-injector/type-provider.interface'
+import { IParameter } from '../function-injector/parameter.interface'
+import { arrayTypeConvector, typeConvector } from './utils'
+import { getRequireMetadata } from './require'
+import { getArrayTypeMeta } from './mood-decorator'
+import { MOOD_PARAMETERS } from './constant'
+import { getModelMeta } from './Model.decorator'
 
 const FALSE = Symbol('false')
 
@@ -46,7 +46,7 @@ export class Mood {
 
   handleModel(Model: any) {
     const model = new Model()
-    const metaKeys: Set<string> = Reflect.getMetadata(PARAMETERS, model)
+    const metaKeys: Set<string> = Reflect.getMetadata(MOOD_PARAMETERS, model)
 
     //获取需要的属性
     for (const key of metaKeys) {

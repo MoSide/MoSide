@@ -16,7 +16,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon --watch ./example --ext ts --exec ts-node ./example",
-    "debug": "ts-node $NODE_DEBUG_OPTION ./src",
+    "debug": "ts-node ./example",
     "build": "gulp release",
     "clean": "gulp clean"
   },
