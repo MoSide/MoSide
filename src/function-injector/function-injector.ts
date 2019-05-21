@@ -1,7 +1,8 @@
-import {TypeProvider} from './type-provider.interface'
-import {logger} from '../utils/logger'
-import {IParameter} from './parameter.interface'
-import {CtrFunc} from './ctr-func'
+import { TypeProvider } from './type-provider.interface'
+import { logger } from '../utils/logger'
+import { IParameter } from './parameter.interface'
+import { CtrFunc } from './ctr-func'
+import { Mood } from '../mood/mood'
 
 export class FunctionInjector {
 
@@ -12,15 +13,18 @@ export class FunctionInjector {
   protected constructor() {
   }
 
-  static create(providers: TypeProvider[], throwError: boolean = true): FunctionInjector {
+  static create(providers: TypeProvider[], throwError: boolean = true, noInjector?: boolean): FunctionInjector {
     const fun = new FunctionInjector()
     fun.THROW_ERROR = throwError
-    fun.push([{token: FunctionInjector, useValue: fun}, ...providers])
+    if (noInjector !== true) {
+      fun.push([{token: FunctionInjector, useValue: fun}])
+    }
+    fun.push(providers)
     return fun
   }
 
-  createChild(providers?: TypeProvider[]): FunctionInjector {
-    const injector = FunctionInjector.create(providers || [], this.THROW_ERROR)
+  createChild(providers?: TypeProvider[], noInjector?: boolean): FunctionInjector {
+    const injector = FunctionInjector.create(providers || [], this.THROW_ERROR, noInjector)
     injector.parent = this
     return injector
   }
@@ -50,12 +54,21 @@ export class FunctionInjector {
     }
   }
 
-  async resolveAndApply(target: CtrFunc | CtrFunc[], stopSignal?: any): Promise<any | any[]> {
+  async resolveAndApply(target: CtrFunc | CtrFunc[], mood?: Mood, stopSignal?: any): Promise<any | any[]> {
     if (Array.isArray(target)) {
       const result: any[] = []
       let index = 0
       for (const cFunc of target) {
-        const status = await this._resolveAndApply(cFunc)
+        let injector: FunctionInjector = this
+        if (mood) {
+          const {result, body} = mood.resolve(cFunc.parameters)
+          if (result) {
+            injector = injector.createChild(body, true)
+          }
+
+          console.log(result)
+        }
+        const status = await injector._resolveAndApply(cFunc)
         if (stopSignal !== undefined && status === stopSignal) {
           return [{
             status: false,
@@ -72,7 +85,14 @@ export class FunctionInjector {
 
       return result
     } else {
-      return await this._resolveAndApply(target)
+      let injector: FunctionInjector = this
+      if (mood) {
+        const {result, body} = mood.resolve(target.parameters)
+        if (result) {
+          injector = injector.createChild(body, true)
+        }
+      }
+      return await injector._resolveAndApply(target)
     }
   }
 
@@ -84,7 +104,6 @@ export class FunctionInjector {
 
   resolve(cFunc: CtrFunc): any[] {
     const cFunParams: IParameter[] = cFunc.parameters
-
     return cFunParams.map(parameter => {
       const param = this.getParam(parameter.token)
 

@@ -10,6 +10,7 @@ import { CtrFunc } from '../../function-injector/ctr-func'
 import { Response } from '../../response-handler/response'
 import { runCycleLife } from './controller'
 import { MethodCtx } from './method-ctx'
+import { Mood } from '../../mood/mood'
 
 
 export class MosideProcess {
@@ -32,9 +33,16 @@ export class MosideProcess {
         try {
           const methodCtx: MethodCtx = new MethodCtx(target, p)
 
+          const mood = Mood.create([
+            ['params', request.params],
+            ['query', request.query],
+            ['body', request.body]
+          ])
+
           const injector = createMethodInjector({
             request,
             response,
+            mood,
             responseHandler,
             methodCtx
           })
@@ -90,10 +98,15 @@ export class MosideProcess {
 
 }
 
-function createMethodInjector({request, response, responseHandler, methodCtx}): FunctionInjector {
+function createMethodInjector({request, response, mood, responseHandler, methodCtx}): FunctionInjector {
   const ctxProvider: TypeProvider = {
     token: Ctx,
     useValue: new Ctx(request, response)
+  }
+
+  const moodProvider: TypeProvider = {
+    token: Mood,
+    useValue: mood
   }
 
   const respHandlerProvider: TypeProvider = {
@@ -113,6 +126,7 @@ function createMethodInjector({request, response, responseHandler, methodCtx}): 
 
   return FunctionInjector.create([
     ctxProvider,
+    moodProvider,
     respHandlerProvider,
     respHandlerProvider2,
     methodCtxProvider
