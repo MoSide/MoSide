@@ -6,7 +6,7 @@ import { MOOD_PARAMETERS } from './constant'
 export const PARAM_REQUIRE = 'parameters:require'
 
 export function Require(target: any, prop: string, index?: number) {
-  if (!index) {
+  if (index === undefined) {
     Reflect.defineMetadata(PARAM_REQUIRE, true, target, prop)
   } else {
     const specParam: IParameter[] = MetadataArray(MOOD_PARAMETERS, target, <string>prop)

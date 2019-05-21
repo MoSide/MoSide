@@ -5,7 +5,7 @@ import { Injectable } from '../src/function-injector'
 
 export class TestPlugin implements PluginInterface {
   @Injectable
-  beforeController(@Require @Inject(Parameter.query, 'token')token: string, mood: Mood) {
-    console.log(`receive token`, token)
+  beforeController(mood: Mood) {
+    console.log(`receive token`)
   }
 }

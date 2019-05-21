@@ -8,7 +8,7 @@ export class Moon {
   constructor(private plugins: PluginInterface[] = []) {
   }
 
-  async run(stage: 'before' | 'after', injector: FunctionInjector, extraPlugins: PluginInterface[]): Promise<boolean> {
+  async run(stage: 'before' | 'after', injector: FunctionInjector, extraPlugins: PluginInterface[]): Promise<{ status: boolean, index?: number, result?: string }> {
     const mood: Mood = injector.get(Mood)
 
     const processPlugin: CtrFunc[] = [
@@ -16,7 +16,10 @@ export class Moon {
       ...extraPlugins.filter(plugin => plugin[stage + 'Controller'])
     ].map(plugin => new CtrFunc(plugin, stage + 'Controller'))
     const [status] = await injector.resolveAndApply(processPlugin, mood, false)
-    return status.status
+    if (status.status === false) {
+      status.result = `${processPlugin[status.index].context.constructor.name}(stage: ${stage}) has wrong process`
+    }
+    return status
   }
 
   add(plugin: PluginInterface) {

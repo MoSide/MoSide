@@ -54,7 +54,10 @@ export class MosideProcess {
             ...mMeta.plugins
           ])
 
-          if (!result) {
+          if (result && result.status === false) {
+            if (!responseHandler['_body']) {
+              responseHandler.status(500).body({ code: -1, err: result.result})
+            }
             // todo
             return responseHandler.response()
           }
@@ -68,8 +71,10 @@ export class MosideProcess {
             ...mMeta.plugins
           ])
 
-          if (!result) {
-            // todo
+          if (result && result.status === false) {
+            if (!responseHandler['_body']) {
+              responseHandler.status(500).body({code: -1, err: result.result})
+            }
           }
 
           responseHandler.response()
@@ -88,7 +93,7 @@ export class MosideProcess {
   constructor(private moon: Moon, private errorHook: Function) {
   }
 
-  async pluginProcess(stage: 'before' | 'after', injector: FunctionInjector, extraPlugins: PluginInterface[]): Promise<boolean> {
+  async pluginProcess(stage: 'before' | 'after', injector: FunctionInjector, extraPlugins: PluginInterface[]): Promise<{ status: boolean, index?: number, result?: string }> {
     return await this.moon.run(stage, injector, extraPlugins)
   }
 

@@ -64,9 +64,12 @@ export class FunctionInjector {
           const {result, body} = mood.resolve(cFunc.parameters)
           if (result) {
             injector = injector.createChild(body, true)
+          } else {
+            return [{
+              status: false,
+              index
+            }]
           }
-
-          console.log(result)
         }
         const status = await injector._resolveAndApply(cFunc)
         if (stopSignal !== undefined && status === stopSignal) {
@@ -90,6 +93,8 @@ export class FunctionInjector {
         const {result, body} = mood.resolve(target.parameters)
         if (result) {
           injector = injector.createChild(body, true)
+        } else {
+          return false
         }
       }
       return await injector._resolveAndApply(target)
