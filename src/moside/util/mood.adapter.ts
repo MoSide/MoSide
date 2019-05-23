@@ -2,7 +2,6 @@ import { PluginInterface } from '../../moon'
 import { FunctionInjector, Injectable } from '../../function-injector'
 import { MethodCtx } from './method-ctx'
 import { Mood } from '../../mood/mood'
-import { Ctx } from '../ctx'
 import { Response } from '../../response-handler'
 
 export class MoodAdapter implements PluginInterface {
@@ -10,15 +9,10 @@ export class MoodAdapter implements PluginInterface {
   @Injectable
   beforeController(
     injector: FunctionInjector,
-    {request: {params = {}, query = {}, body = {}}}: Ctx,
     {parameters}: MethodCtx,
+    mood: Mood,
     response: Response
   ) {
-    const mood = Mood.create([
-      ['params', params],
-      ['query', query],
-      ['body', body]
-    ])
     const resolveResult = mood.resolve(parameters)
     if (resolveResult.result) {
       if (resolveResult.body) {

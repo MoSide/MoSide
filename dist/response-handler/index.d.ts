@@ -1,3 +1,2 @@
-import { Response } from './response'
-
-export { Response }
+import { Response } from './response';
+export { Response };

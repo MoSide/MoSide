@@ -1,6 +1,6 @@
 import { Controller, Http } from '../src/moside'
 import { Response } from '../src/response-handler'
-import { Inject, Parameter, Require } from '../src/mood'
+import {Inject, Parameter, Require} from '../src/mood'
 
 @Controller({
   path: '/'
