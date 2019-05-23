@@ -16,6 +16,7 @@ const ctr_func_1 = require("../../function-injector/ctr-func");
 const response_1 = require("../../response-handler/response");
 const controller_1 = require("./controller");
 const method_ctx_1 = require("./method-ctx");
+const mood_1 = require("../../mood/mood");
 class MosideProcess {
     constructor(moon, errorHook) {
         this.moon = moon;
@@ -35,9 +36,15 @@ class MosideProcess {
                     const responseHandler = new response_1.Response(response, next);
                     try {
                         const methodCtx = new method_ctx_1.MethodCtx(target, p);
+                        const mood = mood_1.Mood.create([
+                            ['params', request.params],
+                            ['query', request.query],
+                            ['body', request.body]
+                        ]);
                         const injector = createMethodInjector({
                             request,
                             response,
+                            mood,
                             responseHandler,
                             methodCtx
                         });
@@ -46,7 +53,10 @@ class MosideProcess {
                             ...cMeta.plugins,
                             ...mMeta.plugins
                         ]);
-                        if (!result) {
+                        if (result && result.status === false) {
+                            if (!responseHandler['_body']) {
+                                responseHandler.status(500).body({ code: -1, err: result.result });
+                            }
                             // todo
                             return responseHandler.response();
                         }
@@ -55,8 +65,10 @@ class MosideProcess {
                             ...cMeta.plugins,
                             ...mMeta.plugins
                         ]);
-                        if (!result) {
-                            // todo
+                        if (result && result.status === false) {
+                            if (!responseHandler['_body']) {
+                                responseHandler.status(500).body({ code: -1, err: result.result });
+                            }
                         }
                         responseHandler.response();
                     }
@@ -82,10 +94,14 @@ class MosideProcess {
     }
 }
 exports.MosideProcess = MosideProcess;
-function createMethodInjector({ request, response, responseHandler, methodCtx }) {
+function createMethodInjector({ request, response, mood, responseHandler, methodCtx }) {
     const ctxProvider = {
         token: ctx_1.Ctx,
         useValue: new ctx_1.Ctx(request, response)
+    };
+    const moodProvider = {
+        token: mood_1.Mood,
+        useValue: mood
     };
     const respHandlerProvider = {
         token: responseHandler.constructor,
@@ -101,6 +117,7 @@ function createMethodInjector({ request, response, responseHandler, methodCtx })
     };
     return function_injector_1.FunctionInjector.create([
         ctxProvider,
+        moodProvider,
         respHandlerProvider,
         respHandlerProvider2,
         methodCtxProvider

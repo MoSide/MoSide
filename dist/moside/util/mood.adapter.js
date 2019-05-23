@@ -12,15 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const function_injector_1 = require("../../function-injector");
 const method_ctx_1 = require("./method-ctx");
 const mood_1 = require("../../mood/mood");
-const ctx_1 = require("../ctx");
 const response_handler_1 = require("../../response-handler");
 class MoodAdapter {
-    beforeController(injector, { request: { params = {}, query = {}, body = {} } }, { parameters }, response) {
-        const mood = mood_1.Mood.create([
-            ['params', params],
-            ['query', query],
-            ['body', body]
-        ]);
+    beforeController(injector, { parameters }, mood, response) {
         const resolveResult = mood.resolve(parameters);
         if (resolveResult.result) {
             if (resolveResult.body) {
@@ -41,8 +35,8 @@ __decorate([
     function_injector_1.Injectable,
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [function_injector_1.FunctionInjector,
-        ctx_1.Ctx,
         method_ctx_1.MethodCtx,
+        mood_1.Mood,
         response_handler_1.Response]),
     __metadata("design:returntype", void 0)
 ], MoodAdapter.prototype, "beforeController", null);
