@@ -6,6 +6,10 @@ export declare class MosideProcess {
     private errorHook;
     proxyHandler: ProxyHandler<Object>;
     constructor(moon: Moon, errorHook: Function);
-    pluginProcess(stage: 'before' | 'after', injector: FunctionInjector, extraPlugins: PluginInterface[]): Promise<boolean>;
+    pluginProcess(stage: 'before' | 'after', injector: FunctionInjector, extraPlugins: PluginInterface[]): Promise<{
+        status: boolean;
+        index?: number;
+        result?: string;
+    }>;
     bindHandler(ctr: any): any;
 }

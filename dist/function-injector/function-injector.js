@@ -14,14 +14,17 @@ class FunctionInjector {
         this.THROW_ERROR = true;
         this.params = new Map();
     }
-    static create(providers, throwError = true) {
+    static create(providers, throwError = true, noInjector) {
         const fun = new FunctionInjector();
         fun.THROW_ERROR = throwError;
-        fun.push([{ token: FunctionInjector, useValue: fun }, ...providers]);
+        if (noInjector !== true) {
+            fun.push([{ token: FunctionInjector, useValue: fun }]);
+        }
+        fun.push(providers);
         return fun;
     }
-    createChild(providers) {
-        const injector = FunctionInjector.create(providers || [], this.THROW_ERROR);
+    createChild(providers, noInjector) {
+        const injector = FunctionInjector.create(providers || [], this.THROW_ERROR, noInjector);
         injector.parent = this;
         return injector;
     }
@@ -47,13 +50,26 @@ class FunctionInjector {
             return this.getParam(type);
         }
     }
-    resolveAndApply(target, stopSignal) {
+    resolveAndApply(target, mood, stopSignal) {
         return __awaiter(this, void 0, void 0, function* () {
             if (Array.isArray(target)) {
                 const result = [];
                 let index = 0;
                 for (const cFunc of target) {
-                    const status = yield this._resolveAndApply(cFunc);
+                    let injector = this;
+                    if (mood) {
+                        const { result, body } = mood.resolve(cFunc.parameters);
+                        if (result) {
+                            injector = injector.createChild(body, true);
+                        }
+                        else {
+                            return [{
+                                    status: false,
+                                    index
+                                }];
+                        }
+                    }
+                    const status = yield injector._resolveAndApply(cFunc);
                     if (stopSignal !== undefined && status === stopSignal) {
                         return [{
                                 status: false,
@@ -69,7 +85,17 @@ class FunctionInjector {
                 return result;
             }
             else {
-                return yield this._resolveAndApply(target);
+                let injector = this;
+                if (mood) {
+                    const { result, body } = mood.resolve(target.parameters);
+                    if (result) {
+                        injector = injector.createChild(body, true);
+                    }
+                    else {
+                        return false;
+                    }
+                }
+                return yield injector._resolveAndApply(target);
             }
         });
     }

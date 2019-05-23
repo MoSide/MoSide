@@ -5,7 +5,7 @@ const metadata_array_1 = require("../utils/metadata-array");
 const constant_1 = require("./constant");
 exports.PARAM_REQUIRE = 'parameters:require';
 function Require(target, prop, index) {
-    if (!index) {
+    if (index === undefined) {
         Reflect.defineMetadata(exports.PARAM_REQUIRE, true, target, prop);
     }
     else {
