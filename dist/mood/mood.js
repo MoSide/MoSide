@@ -26,8 +26,8 @@ class Mood {
             }
             else {
                 if (Model_decorator_1.getModelMeta(param.type)) {
-                    const ret = this.handleModel(param);
-                    if (ret === false) {
+                    const ret = this.handleModel(param.type);
+                    if (ret === FALSE) {
                         return { result: false };
                     }
                     body.push({ token: ret.constructor, useValue: ret });
@@ -44,7 +44,7 @@ class Mood {
             let parameters = Reflect.getMetadata(key, model);
             const source = this.source.get(key);
             if (!source) {
-                continue;
+                return FALSE;
             }
             const result = parameters.findIndex(({ property, type }) => {
                 if (source[property] === undefined) {

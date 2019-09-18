@@ -25,9 +25,14 @@ function setHttpMethodMeta(target: Object, prop: string, descriptor: PropertyDes
 export function Http(target: Object, prop: string, descriptor: PropertyDescriptor) {
   const methodSplit = /^(\w+?)::(.*?)$/
   let [_, method, path] = prop.split(methodSplit)
-  if (_) {
-    method = 'get'
-    path = _
+  if (_) { //当仅存在method或path时
+    if (['get', 'post', 'put', 'del', 'head'].includes(_)) {
+      method = _
+      path = '/'
+    } else {
+      method = 'get'
+      path = _
+    }
   }
   setHttpMethodMeta(target, prop, descriptor, method, path)
 }

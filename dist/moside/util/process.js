@@ -8,12 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const HttpMethod_1 = require("../decorators/HttpMethod");
-const Controller_1 = require("../decorators/Controller");
+const __1 = require("..");
+const __2 = require("..");
 const ctx_1 = require("../ctx");
-const function_injector_1 = require("../../function-injector/function-injector");
-const ctr_func_1 = require("../../function-injector/ctr-func");
-const response_1 = require("../../response-handler/response");
+const function_injector_1 = require("../../function-injector");
+const function_injector_2 = require("../../function-injector");
+const response_handler_1 = require("../../response-handler");
 const controller_1 = require("./controller");
 const method_ctx_1 = require("./method-ctx");
 const mood_1 = require("../../mood/mood");
@@ -27,13 +27,13 @@ class MosideProcess {
                 if (typeof m !== 'function') {
                     return m;
                 }
-                const mMeta = HttpMethod_1.getControllerMethodMetadata(target, p);
+                const mMeta = __1.getControllerMethodMetadata(target, p);
                 if (!mMeta) {
                     return m;
                 }
-                const cMeta = Controller_1.getControllerMetadata(target);
+                const cMeta = __2.getControllerMetadata(target);
                 return (request, response, next) => __awaiter(this, void 0, void 0, function* () {
-                    const responseHandler = new response_1.Response(response, next);
+                    const responseHandler = new response_handler_1.Response(response, next);
                     try {
                         const methodCtx = new method_ctx_1.MethodCtx(target, p);
                         const mood = mood_1.Mood.create([
@@ -60,7 +60,7 @@ class MosideProcess {
                             // todo
                             return responseHandler.response();
                         }
-                        yield injector.resolveAndApply(new ctr_func_1.CtrFunc(target, p));
+                        yield injector.resolveAndApply(new function_injector_2.CtrFunc(target, p));
                         result = yield this.pluginProcess('after', injector, [
                             ...cMeta.plugins,
                             ...mMeta.plugins
@@ -108,7 +108,7 @@ function createMethodInjector({ request, response, mood, responseHandler, method
         useValue: responseHandler
     };
     const respHandlerProvider2 = {
-        token: response_1.Response,
+        token: response_handler_1.Response,
         useValue: responseHandler
     };
     const methodCtxProvider = {

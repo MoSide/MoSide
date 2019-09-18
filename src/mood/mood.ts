@@ -32,8 +32,8 @@ export class Mood {
         body.push({token: param.target, useValue: ret})
       } else {
         if (getModelMeta(param.type)) {
-          const ret = this.handleModel(param)
-          if (ret === false) {
+          const ret = this.handleModel(param.type)
+          if (ret === FALSE) {
             return {result: false}
           }
           body.push({token: ret.constructor, useValue: ret})
@@ -54,7 +54,7 @@ export class Mood {
       const source = this.source.get(key)
 
       if (!source) {
-        continue
+        return FALSE
       }
 
       const result = parameters.findIndex(({property, type}) => {
