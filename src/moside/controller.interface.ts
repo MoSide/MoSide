@@ -1,4 +1,4 @@
-import {PluginInterface} from "../moon/plugin.interface";
+import {PluginInterface} from '../moon'
 
 export interface ControllerOptions {
   providers?: Array<any>

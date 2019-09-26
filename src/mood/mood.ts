@@ -1,11 +1,11 @@
-import { IModelProperty } from './model-property.interface'
-import { TypeProvider } from '../function-injector/type-provider.interface'
-import { IParameter } from '../function-injector/parameter.interface'
-import { arrayTypeConvector, typeConvector } from './utils'
-import { getRequireMetadata } from './require'
-import { getArrayTypeMeta } from './mood-decorator'
-import { MOOD_PARAMETERS } from './constant'
-import { getModelMeta } from './Model.decorator'
+import {IModelProperty} from './model-property.interface'
+import {TypeProvider} from '../function-injector'
+import {IParameter} from '../function-injector/parameter.interface'
+import {arrayTypeConvector, typeConvector} from './utils'
+import {getRequireMetadata} from './require'
+import {getArrayTypeMeta} from './mood-decorator'
+import {MOOD_PARAMETERS} from './constant'
+import {getModelMeta} from './Model.decorator'
 
 const FALSE = Symbol('false')
 
@@ -84,7 +84,7 @@ export class Mood {
     return model
   }
 
-  handleParameter({target, require, type}: IParameter) {
+  handleParameter({target, require, type, defaultValue}: IParameter) {
     if (!target) {
       target = ''
     }
@@ -115,7 +115,7 @@ export class Mood {
       }
     }
 
-    return value !== undefined ? value : null
+    return value !== undefined ? value : defaultValue
   }
 
 }

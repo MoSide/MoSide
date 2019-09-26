@@ -1,8 +1,8 @@
-import {IControllerMetadata} from "../controller.interface";
-import {getControllerMetadata} from "../decorators/Controller";
-import {MosideProcess} from "./process";
-import {IHttpMethod} from "../method.interface";
-import {CtrFunc} from "../../function-injector/ctr-func";
+import {IControllerMetadata} from '../controller.interface'
+import {getControllerMetadata} from '..'
+import {MosideProcess} from './process'
+import {IHttpMethod} from '../method.interface'
+import {CtrFunc} from '../../function-injector'
 
 
 export async function initController(process: MosideProcess, routerList: any[]): Promise<IHttpMethod[]> {
@@ -11,17 +11,13 @@ export async function initController(process: MosideProcess, routerList: any[]):
   }
   const methods: IHttpMethod[] = []
 
-  // todo 这里可能需要做异步处理
-  await asyncForeach(routerList, async controller => {
+  await Promise.all(routerList.map(async (controller) => {
     const cMeta: IControllerMetadata = getControllerMetadata(controller)
     const cIns = new controller()
     // 绑定代理
     const ctx = bindCtrProxy(process, cIns)
 
-    // 执行onInit
-    await runCycleLife('onInit', cIns)
-
-    await asyncForeach(cMeta.methods, cMethod => {
+    cMeta.methods.forEach((cMethod) => {
       const path = getCtrMethodPath(cMeta.path, cMethod.path)
 
       methods.push({
@@ -30,15 +26,12 @@ export async function initController(process: MosideProcess, routerList: any[]):
         target: new CtrFunc(ctx, cMethod.key)
       })
     })
-  })
+
+    // 执行onInit
+    return runCycleLife('onInit', cIns)
+  }))
 
   return methods
-}
-
-async function asyncForeach<T>(array: T[], callback: (value: T, index: number, arr: T[]) => any) {
-  for (const index in array) {
-    await callback(array[index], <any>index, array)
-  }
 }
 
 export async function runCycleLife(hook: string, context: any) {

@@ -1,6 +1,6 @@
-import {Body, Model, Query, Require} from '../src/mood'
+import {Model, Query} from '../src/mood'
 
 @Model
 export class TestReceiver {
-  @Require @Query test: number
+  @Query test: number
 }

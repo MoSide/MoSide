@@ -1,5 +1,5 @@
 export class Ctx {
-  constructor(public request: any, public  response: any) {
+  constructor(public request: any, public response: any) {
   }
 }
 

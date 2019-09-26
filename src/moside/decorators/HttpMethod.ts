@@ -2,7 +2,7 @@ import 'reflect-metadata'
 import {getControllerMetadata} from './Controller'
 import {IControllerMethodMetadata, IHttpMethodFunction} from '../controller.interface'
 import {METHOD} from '../symbol'
-import {Injectable} from '../../function-injector/Injectable.decorator'
+import {Injectable} from '../../function-injector'
 
 function setHttpMethodMeta(target: Object, prop: string, descriptor: PropertyDescriptor, method: string, path?: string) {
 

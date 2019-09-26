@@ -1,7 +1,6 @@
 import {Controller, Http} from '../src/moside'
 import {Response} from '../src/response-handler'
-import {Inject, Parameter, Require} from '../src/mood'
-import {TestReceiver} from './test-receiver'
+import {Inject, Parameter} from '../src/mood'
 
 @Controller({
   path: '/'
@@ -9,7 +8,7 @@ import {TestReceiver} from './test-receiver'
 export class HomeController {
 
   @Http
-  get(test: TestReceiver,
+  get(@Inject(Parameter.path, 'id', {test: 1}) test: number,
       res: Response) {
     res.body({
       message: 'hello world',

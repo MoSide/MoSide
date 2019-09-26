@@ -1,5 +1,5 @@
-import { Ctx } from '../moside/ctx'
-import { ResponseAdapter } from '../moside/framework.interface'
+import {Ctx} from '../moside'
+import {ResponseAdapter} from '../moside/framework.interface'
 
 export class Response {
 
