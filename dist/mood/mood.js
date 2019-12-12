@@ -60,25 +60,26 @@ class Mood {
                     }
                 }
                 else {
-                    model[property] = utils_1.typeConvector(source[property], type);
+                    model[property] = utils_1.typeConvector(source[property], type)
                 }
-                return false;
+                return false
             });
             if (result > -1) {
-                return FALSE;
+                return FALSE
             }
         }
-        return model;
+        return model
     }
-    handleParameter({ target, require, type }) {
+
+    handleParameter({target, require, type, defaultValue}) {
         if (!target) {
-            target = '';
+            target = ''
         }
-        let pos = target.split('.');
-        const source = pos.shift();
-        let value;
+        let pos = target.split('.')
+        const source = pos.shift()
+        let value
         if (this.source.has(source)) {
-            value = this.source.get(source);
+            value = this.source.get(source)
             pos.find(p => {
                 if (value === undefined) {
                     return true;
@@ -97,7 +98,7 @@ class Mood {
                 value = utils_1.typeConvector(value, type);
             }
         }
-        return value !== undefined ? value : null;
+        return value !== undefined ? value : defaultValue
     }
 }
 exports.Mood = Mood;

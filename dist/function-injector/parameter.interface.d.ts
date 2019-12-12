@@ -3,5 +3,7 @@ export interface IParameter {
     type: any;
     index: number;
     require?: boolean;
+    defaultValue?: any;
+
     [param: string]: any;
 }

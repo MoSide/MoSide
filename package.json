@@ -1,6 +1,6 @@
 {
   "name": "@moside/moside",
-  "version": "0.5.7-a",
+  "version": "0.5.9-a",
   "description": "decorator风格web api框架",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

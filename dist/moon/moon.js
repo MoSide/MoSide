@@ -8,20 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const ctr_func_1 = require("../function-injector/ctr-func");
-const mood_1 = require("../mood/mood");
+const function_injector_1 = require('../function-injector')
+const mood_1 = require('../mood/mood')
 class Moon {
     constructor(plugins = []) {
         this.plugins = plugins;
     }
     run(stage, injector, extraPlugins) {
         return __awaiter(this, void 0, void 0, function* () {
-            const mood = injector.get(mood_1.Mood);
+            const mood = injector.get(mood_1.Mood)
             const processPlugin = [
                 ...this.plugins.filter(plugin => plugin[stage + 'Controller']),
                 ...extraPlugins.filter(plugin => plugin[stage + 'Controller'])
-            ].map(plugin => new ctr_func_1.CtrFunc(plugin, stage + 'Controller'));
-            const [status] = yield injector.resolveAndApply(processPlugin, mood, false);
+            ].map(plugin => new function_injector_1.CtrFunc(plugin, stage + 'Controller'))
+            const [status] = yield injector.resolveAndApply(processPlugin, mood, false)
             if (status.status === false) {
                 status.result = `${processPlugin[status.index].context.constructor.name}(stage: ${stage}) has wrong process`;
             }

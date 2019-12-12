@@ -1,12 +1,15 @@
-import { PluginInterface } from "../moon/plugin.interface";
+import { PluginInterface } from '../moon'
+
 export interface ControllerOptions {
-    providers?: Array<any>;
-    path?: string;
-    plugins?: PluginInterface[];
+  providers?: Array<any>;
+  path?: string;
+  plugins?: PluginInterface[];
 }
+
 export interface IHttpMethodFunction {
-    (path?: string): Function;
+  (path?: string): Function;
 }
+
 export interface IControllerMetadata {
     path: string;
     methods: IControllerMethodMetadata[];
