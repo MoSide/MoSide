@@ -6,7 +6,6 @@ const constant_1 = require("./constant");
 function getTarget(method, prop) {
     return method + '.' + prop
 }
-
 function Inject(method, prop, defaultValue = null) {
     return (target, propertyKey, pIndex) => {
         const targetPoint = getTarget(method, prop)
@@ -18,7 +17,7 @@ function Inject(method, prop, defaultValue = null) {
             target: targetPoint,
             spec: true,
             defaultValue
-        });
+        })
     };
 }
 exports.Inject = Inject;

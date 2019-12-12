@@ -5,11 +5,9 @@ export interface ControllerOptions {
   path?: string;
   plugins?: PluginInterface[];
 }
-
 export interface IHttpMethodFunction {
   (path?: string): Function;
 }
-
 export interface IControllerMetadata {
     path: string;
     methods: IControllerMethodMetadata[];

@@ -4,6 +4,5 @@ export interface IParameter {
     index: number;
     require?: boolean;
     defaultValue?: any;
-
     [param: string]: any;
 }

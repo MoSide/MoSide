@@ -111,7 +111,7 @@ class FunctionInjector {
             if (param === void 0) {
                 throw new Error(`${cFunc.targetType.name}(${cFunc.prop}) -> ${parameter.type.name || parameter.type}(${parameter.index}) has no provider`);
             }
-            return param || null;
+            return param === undefined ? null : param
         });
     }
     getParam(type) {

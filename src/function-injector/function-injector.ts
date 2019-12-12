@@ -118,7 +118,7 @@ export class FunctionInjector {
         )
       }
 
-      return param || null
+      return param === undefined ? null : param
     })
   }
 

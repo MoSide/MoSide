@@ -82,10 +82,10 @@ class Mood {
             value = this.source.get(source)
             pos.find(p => {
                 if (value === undefined) {
-                    return true;
+                    return true
                 }
-                value = value[p];
-            });
+                value = value[p]
+            })
         }
         if (require && value === undefined) {
             return FALSE;
