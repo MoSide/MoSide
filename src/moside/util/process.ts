@@ -1,16 +1,14 @@
-import { getControllerMethodMetadata } from '..'
+import { getControllerMetadata, getControllerMethodMetadata } from '..'
 import { IControllerMetadata, IControllerMethodMetadata } from '../controller.interface'
-import { getControllerMetadata } from '..'
 import { Ctx } from '../ctx'
-import { TypeProvider } from '../../function-injector'
-import { FunctionInjector } from '../../function-injector'
+import { CtrFunc, FunctionInjector, TypeProvider } from '../../function-injector'
 import { Moon } from '../../moon/moon'
 import { PluginInterface } from '../../moon'
-import { CtrFunc } from '../../function-injector'
 import { Response } from '../../response-handler'
 import { runCycleLife } from './controller'
 import { MethodCtx } from './method-ctx'
 import { Mood } from '../../mood/mood'
+import { Reason } from './reason'
 
 
 export class MosideProcess {
@@ -47,29 +45,26 @@ export class MosideProcess {
             methodCtx
           })
 
-          let result
-
-          result = await this.pluginProcess('before', injector, [
+          const extraPlugins = [
             ...cMeta.plugins,
             ...mMeta.plugins
-          ])
+          ]
+
+          let result
+
+          result = await this.pluginProcess('before', injector, extraPlugins)
 
           if (result && result.status === false) {
             if (!responseHandler['_body']) {
-              responseHandler.status(500).body({ code: -1, err: result.result})
+              responseHandler.status(500).body({code: -1, err: result.result})
             }
             // todo
             return responseHandler.response()
           }
 
-          await injector.resolveAndApply(
-            new CtrFunc(target, p)
-          )
+          await this.runController(injector, new CtrFunc(target, p), extraPlugins)
 
-          result = await this.pluginProcess('after', injector, [
-            ...cMeta.plugins,
-            ...mMeta.plugins
-          ])
+          result = await this.pluginProcess('after', injector, extraPlugins)
 
           if (result && result.status === false) {
             if (!responseHandler['_body']) {
@@ -93,7 +88,7 @@ export class MosideProcess {
   constructor(private moon: Moon, private errorHook: Function) {
   }
 
-  async pluginProcess(stage: 'before' | 'after', injector: FunctionInjector, extraPlugins: PluginInterface[]): Promise<{ status: boolean, index?: number, result?: string }> {
+  async pluginProcess(stage: 'before' | 'after' | 'error', injector: FunctionInjector, extraPlugins: PluginInterface[]): Promise<{ status: boolean, index?: number, result?: string }> {
     return await this.moon.run(stage, injector, extraPlugins)
   }
 
@@ -101,6 +96,22 @@ export class MosideProcess {
     return new Proxy(ctr, this.proxyHandler)
   }
 
+  private async runController(injector: FunctionInjector, controller: CtrFunc, extraPlugins: PluginInterface[]) {
+    try {
+      await injector.resolveAndApply(
+        controller
+      )
+    } catch (e) {
+      const errInjector = injector.createChild([{
+        token: Reason,
+        useValue: new Reason(e)
+      }])
+      const {status} = await this.pluginProcess('error', errInjector, extraPlugins)
+      if (!status) {
+        throw e
+      }
+    }
+  }
 }
 
 function createMethodInjector({request, response, mood, responseHandler, methodCtx}): FunctionInjector {
