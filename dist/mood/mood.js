@@ -76,29 +76,35 @@ class Mood {
             target = ''
         }
         let pos = target.split('.')
-        const source = pos.shift()
-        let value
-        if (this.source.has(source)) {
-            value = this.source.get(source)
-            pos.find(p => {
-                if (value === undefined) {
-                    return true
-                }
-                value = value[p]
-            })
+        const tag = pos.shift()
+        const sources = tag === 'all' ? ['params', 'query', 'body'] : [tag]
+        let value = void 0
+        sources.find(source => {
+            if (this.source.has(source)) {
+                value = this.source.get(source)
+                let posTag = -1
+                pos.find((p, index) => {
+                    if (value === void 0) {
+                        return true
+                    }
+                    posTag = index
+                    value = value[p]
+                })
+                return posTag === pos.length - 1 && value !== void 0
+            }
+            return false
+        })
+        if (require && value === void 0) {
+            return FALSE
         }
-        if (require && value === undefined) {
-            return FALSE;
-        }
-        if (value !== undefined) {
+        if (value !== void 0) {
             if (type === Array) {
                 //todo 增加数组的处理
-            }
-            else {
-                value = utils_1.typeConvector(value, type);
+            } else {
+                value = utils_1.typeConvector(value, type)
             }
         }
-        return value !== undefined ? value : defaultValue
+        return value !== void 0 ? value : defaultValue
     }
 }
 exports.Mood = Mood;

@@ -38,10 +38,15 @@ class Moon {
     run(stage, injector, extraPlugins) {
         return __awaiter(this, void 0, void 0, function* () {
             const mood = injector.get(mood_1.Mood)
+            const target = {
+                before: 'beforeController',
+                after: 'afterController',
+                error: 'onControllerError'
+            }[stage]
             const processPlugin = [
-                ...this.plugins.filter(plugin => plugin[stage + 'Controller']),
-                ...extraPlugins.filter(plugin => plugin[stage + 'Controller'])
-            ].map(plugin => new function_injector_1.CtrFunc(plugin, stage + 'Controller'))
+                ...this.plugins.filter(plugin => plugin[target]),
+                ...extraPlugins.filter(plugin => plugin[target])
+            ].map(plugin => new function_injector_1.CtrFunc(plugin, target))
             const [status] = yield injector.resolveAndApply(processPlugin, mood, false)
             if (status.status === false) {
                 status.result = `${processPlugin[status.index].context.constructor.name}(stage: ${stage}) has wrong process`

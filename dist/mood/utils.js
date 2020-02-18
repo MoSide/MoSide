@@ -60,5 +60,5 @@ function toString(content) {
     if (typeof content === 'string') {
         return content;
     }
-    String(content);
+    return String(content)
 }

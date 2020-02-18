@@ -15,8 +15,8 @@ function setHttpMethodMeta(target, prop, descriptor, method, path) {
         key: prop,
         plugins: []
     }
-    setControllerMethodMetadata(target, prop, mMeta);
-    cMeta.methods.push(mMeta);
+    setControllerMethodMetadata(target, prop, mMeta)
+    cMeta.methods.push(mMeta)
 }
 function Http(target, prop, descriptor) {
     const methodSplit = /^(\w+?)::(.*?)$/;

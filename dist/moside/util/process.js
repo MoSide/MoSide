@@ -4,34 +4,35 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
+
+        step((generator = generator.apply(thisArg, _arguments || [])).next())
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const __1 = require("..");
-const __2 = require("..");
-const ctx_1 = require("../ctx");
-const function_injector_1 = require("../../function-injector");
-const function_injector_2 = require("../../function-injector");
-const response_handler_1 = require("../../response-handler");
-const controller_1 = require("./controller");
-const method_ctx_1 = require("./method-ctx");
-const mood_1 = require("../../mood/mood");
+Object.defineProperty(exports, '__esModule', {value: true})
+const __1 = require('..')
+const ctx_1 = require('../ctx')
+const function_injector_1 = require('../../function-injector')
+const response_handler_1 = require('../../response-handler')
+const controller_1 = require('./controller')
+const method_ctx_1 = require('./method-ctx')
+const mood_1 = require('../../mood/mood')
+const reason_1 = require('./reason')
+
 class MosideProcess {
     constructor(moon, errorHook) {
-        this.moon = moon;
-        this.errorHook = errorHook;
+        this.moon = moon
+        this.errorHook = errorHook
         this.proxyHandler = {
             get: (target, p, receiver) => {
-                const m = Reflect.get(target, p, receiver);
+                const m = Reflect.get(target, p, receiver)
                 if (typeof m !== 'function') {
-                    return m;
+                    return m
                 }
                 const mMeta = __1.getControllerMethodMetadata(target, p);
                 if (!mMeta) {
                     return m;
                 }
-                const cMeta = __2.getControllerMetadata(target);
+                const cMeta = __1.getControllerMetadata(target)
                 return (request, response, next) => __awaiter(this, void 0, void 0, function* () {
                     const responseHandler = new response_handler_1.Response(response, next);
                     try {
@@ -47,30 +48,28 @@ class MosideProcess {
                             mood,
                             responseHandler,
                             methodCtx
-                        });
-                        let result;
-                        result = yield this.pluginProcess('before', injector, [
+                        })
+                        const extraPlugins = [
                             ...cMeta.plugins,
                             ...mMeta.plugins
-                        ]);
+                        ]
+                        let result
+                        result = yield this.pluginProcess('before', injector, extraPlugins)
                         if (result && result.status === false) {
                             if (!responseHandler['_body']) {
-                                responseHandler.status(500).body({ code: -1, err: result.result });
+                                responseHandler.status(500).body({code: -1, err: result.result})
                             }
                             // todo
-                            return responseHandler.response();
+                            return responseHandler.response()
                         }
-                        yield injector.resolveAndApply(new function_injector_2.CtrFunc(target, p));
-                        result = yield this.pluginProcess('after', injector, [
-                            ...cMeta.plugins,
-                            ...mMeta.plugins
-                        ]);
+                        yield this.runController(injector, new function_injector_1.CtrFunc(target, p), extraPlugins)
+                        result = yield this.pluginProcess('after', injector, extraPlugins)
                         if (result && result.status === false) {
                             if (!responseHandler['_body']) {
-                                responseHandler.status(500).body({ code: -1, err: result.result });
+                                responseHandler.status(500).body({code: -1, err: result.result})
                             }
                         }
-                        responseHandler.response();
+                        responseHandler.response()
                     }
                     catch (e) {
                         const result = yield controller_1.runCycleLife('onError', target);
@@ -84,13 +83,32 @@ class MosideProcess {
             }
         };
     }
+
     pluginProcess(stage, injector, extraPlugins) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.moon.run(stage, injector, extraPlugins);
-        });
+            return yield this.moon.run(stage, injector, extraPlugins)
+        })
     }
+
     bindHandler(ctr) {
-        return new Proxy(ctr, this.proxyHandler);
+        return new Proxy(ctr, this.proxyHandler)
+    }
+
+    runController(injector, controller, extraPlugins) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield injector.resolveAndApply(controller)
+            } catch (e) {
+                const errInjector = injector.createChild([{
+                    token: reason_1.Reason,
+                    useValue: new reason_1.Reason(e)
+                }])
+                const {status} = yield this.pluginProcess('error', errInjector, extraPlugins)
+                if (!status) {
+                    throw e
+                }
+            }
+        })
     }
 }
 exports.MosideProcess = MosideProcess;
