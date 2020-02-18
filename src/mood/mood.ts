@@ -1,11 +1,11 @@
-import {IModelProperty} from './model-property.interface'
-import {TypeProvider} from '../function-injector'
-import {IParameter} from '../function-injector/parameter.interface'
-import {arrayTypeConvector, typeConvector} from './utils'
-import {getRequireMetadata} from './require'
-import {getArrayTypeMeta} from './mood-decorator'
-import {MOOD_PARAMETERS} from './constant'
-import {getModelMeta} from './Model.decorator'
+import { IModelProperty } from './model-property.interface'
+import { TypeProvider } from '../function-injector'
+import { IParameter } from '../function-injector/parameter.interface'
+import { arrayTypeConvector, typeConvector } from './utils'
+import { getRequireMetadata } from './require'
+import { getArrayTypeMeta } from './mood-decorator'
+import { MOOD_PARAMETERS } from './constant'
+import { getModelMeta } from './Model.decorator'
 
 const FALSE = Symbol('false')
 
@@ -89,25 +89,34 @@ export class Mood {
       target = ''
     }
     let pos = target.split('.')
-    const source = pos.shift()
-    let value
+    const tag: string = pos.shift()
+    const sources: string[] = tag === 'all' ? ['params', 'query', 'body'] : [tag]
+    let value: any = void 0
 
-    if (this.source.has(source)) {
-      value = this.source.get(source)
+    sources.find(source => {
+      if (this.source.has(source)) {
+        value = this.source.get(source)
+        let posTag = -1
 
-      pos.find(p => {
-        if (value === undefined) {
-          return true
-        }
-        value = value[p]
-      })
-    }
+        pos.find((p, index) => {
+          if (value === void 0) {
+            return true
+          }
+          posTag = index
+          value = value[p]
+        })
 
-    if (require && value === undefined) {
+        return posTag === pos.length - 1 && value !== void 0
+      }
+      return false
+    })
+
+
+    if (require && value === void 0) {
       return FALSE
     }
 
-    if (value !== undefined) {
+    if (value !== void 0) {
       if (type === Array) {
         //todo 增加数组的处理
       } else {
@@ -115,7 +124,7 @@ export class Mood {
       }
     }
 
-    return value !== undefined ? value : defaultValue
+    return value !== void 0 ? value : defaultValue
   }
 
 }
