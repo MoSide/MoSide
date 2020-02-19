@@ -1,4 +1,6 @@
 import * as e from 'express'
 
-export const app: e.Express = e()
+import { json } from 'body-parser'
 
+export const app: e.Express = e()
+app.use(json())

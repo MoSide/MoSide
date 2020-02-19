@@ -1,13 +1,31 @@
-"use strict";
+'use strict'
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function fulfilled(value) {
+            try {
+                step(generator.next(value))
+            } catch (e) {
+                reject(e)
+            }
+        }
+
+        function rejected(value) {
+            try {
+                step(generator['throw'](value))
+            } catch (e) {
+                reject(e)
+            }
+        }
+
+        function step(result) {
+            result.done ? resolve(result.value) : new P(function (resolve) {
+                resolve(result.value)
+            }).then(fulfilled, rejected)
+        }
 
         step((generator = generator.apply(thisArg, _arguments || [])).next())
-    });
-};
+    })
+}
 Object.defineProperty(exports, '__esModule', {value: true})
 const __1 = require('..')
 const ctx_1 = require('../ctx')
@@ -28,9 +46,9 @@ class MosideProcess {
                 if (typeof m !== 'function') {
                     return m
                 }
-                const mMeta = __1.getControllerMethodMetadata(target, p);
+                const mMeta = __1.getControllerMethodMetadata(target, p)
                 if (!mMeta) {
-                    return m;
+                    return m
                 }
                 const cMeta = __1.getControllerMetadata(target)
                 return (request, response, next) => __awaiter(this, void 0, void 0, function* () {
@@ -83,17 +101,14 @@ class MosideProcess {
             }
         };
     }
-
     pluginProcess(stage, injector, extraPlugins) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.moon.run(stage, injector, extraPlugins)
         })
     }
-
     bindHandler(ctr) {
         return new Proxy(ctr, this.proxyHandler)
     }
-
     runController(injector, controller, extraPlugins) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -108,7 +123,7 @@ class MosideProcess {
                     throw e
                 }
             }
-        })
+        });
     }
 }
 exports.MosideProcess = MosideProcess;

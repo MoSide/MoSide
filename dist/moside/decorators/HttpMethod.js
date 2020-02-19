@@ -6,17 +6,17 @@ const symbol_1 = require('../symbol')
 const function_injector_1 = require('../../function-injector')
 
 function setHttpMethodMeta(target, prop, descriptor, method, path) {
-    function_injector_1.Injectable(target, prop)
-    const cMeta = Controller_1.getControllerMetadata(target.constructor)
-    const mMeta = {
-        func: descriptor.value,
-        method,
-        path: path || prop || '/',
-        key: prop,
-        plugins: []
-    }
-    setControllerMethodMetadata(target, prop, mMeta)
-    cMeta.methods.push(mMeta)
+  function_injector_1.Injectable(target, prop)
+  const cMeta = Controller_1.getControllerMetadata(target.constructor)
+  const mMeta = {
+    func: descriptor.value,
+    method,
+    path: path || prop || '/',
+    key: prop,
+    plugins: []
+  }
+  setControllerMethodMetadata(target, prop, mMeta)
+  cMeta.methods.push(mMeta)
 }
 function Http(target, prop, descriptor) {
     const methodSplit = /^(\w+?)::(.*?)$/;

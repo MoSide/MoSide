@@ -8,11 +8,14 @@ import { Inject, Parameter } from '../src/mood'
 export class HomeController {
 
   @Http
-  get(@Inject(Parameter.query, 'id', 0) test: number,
-      res: Response) {
-    res.body({
-      message: 'hello world',
-      test
-    })
+  'post::/'(
+    @Inject(Parameter.all, 'id') test: string,
+    res: Response
+  ) {
+    throw Error('110011:TEST ERROR')
+    // res.body({
+    //   message: 'hello world',
+    //   test
+    // })
   }
 }
